@@ -97,19 +97,13 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-MPU6050_Init();
-Mahony_Init(&mf, 2.0f, 0.005f);
-uint32_t last_time = HAL_GetTick();
-float dt;
+  MPU6050_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   { 
-    uint32_t now = HAL_GetTick();
-    dt = (now - last_time) / 1000.0f;
-    last_time = now;
     MPU6050_ReadRawData(AccX_Raw, AccY_Raw, AccZ_Raw, GyroX_Raw, GyroY_Raw, GyroZ_Raw);
     Ax = AccX_Raw;
     Ay = AccY_Raw;
@@ -117,7 +111,8 @@ float dt;
     Gx = GyroX_Raw;
     Gy = GyroY_Raw;
     Gz = GyroZ_Raw;
-    Mahony_Update(&mf, Ax, Ay, Az, Gx, Gy, Gz, dt);
+    float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};  // 初始化四元数
+    MahonyAHRSupdateIMU(&mf, q, Gx, Gy, Gz, Ax, Ay, Az);
     Pitch = mf.Pitch;
     Roll = mf.Roll;
     Yaw = mf.Yaw;
