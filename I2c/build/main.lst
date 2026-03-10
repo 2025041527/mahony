@@ -1,0 +1,993 @@
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.arch armv7-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/main.c"
+  18              		.section	.text.Error_Handler,"ax",%progbits
+  19              		.align	1
+  20              		.global	Error_Handler
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	Error_Handler:
+  26              	.LFB67:
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * Copyright (c) 2026 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****   * in the root directory of this software component.
+  14:Core/Src/main.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****   *
+  16:Core/Src/main.c ****   ******************************************************************************
+  17:Core/Src/main.c ****   */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/main.c **** #include "main.h"
+  21:Core/Src/main.c **** #include "i2c.h"
+  22:Core/Src/main.c **** #include "gpio.h"
+  23:Core/Src/main.c **** #include "MPU6050.h"
+  24:Core/Src/main.c **** #include "math.h"
+  25:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  26:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  27:Core/Src/main.c **** #ifndef M_PI
+  28:Core/Src/main.c **** #define M_PI 3.14159265358979323846f;
+  29:Core/Src/main.c **** #endif
+  30:Core/Src/main.c **** /* USER CODE END Includes */
+  31:Core/Src/main.c **** 
+  32:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 2
+
+
+  33:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  34:Core/Src/main.c **** 
+  35:Core/Src/main.c **** /* USER CODE END PTD */
+  36:Core/Src/main.c **** 
+  37:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  38:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  39:Core/Src/main.c **** 
+  40:Core/Src/main.c **** /* USER CODE END PD */
+  41:Core/Src/main.c **** 
+  42:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  43:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  44:Core/Src/main.c **** 
+  45:Core/Src/main.c **** /* USER CODE END PM */
+  46:Core/Src/main.c **** 
+  47:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  50:Core/Src/main.c **** float Pitch = 0.0f; // 俯仰角
+  51:Core/Src/main.c **** float Roll = 0.0f;  // 横滚角
+  52:Core/Src/main.c **** float Yaw = 0.0f;   // 偏航角
+  53:Core/Src/main.c **** int16_t AccX_Raw, AccY_Raw, AccZ_Raw;
+  54:Core/Src/main.c **** int16_t GyroX_Raw, GyroY_Raw, GyroZ_Raw;
+  55:Core/Src/main.c **** float Ax, Ay, Az, Gx, Gy, Gz;
+  56:Core/Src/main.c **** MahonyFilter mf;
+  57:Core/Src/main.c **** /* USER CODE END PV */
+  58:Core/Src/main.c **** 
+  59:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  60:Core/Src/main.c **** void SystemClock_Config(void);
+  61:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  62:Core/Src/main.c **** 
+  63:Core/Src/main.c **** /* USER CODE END PFP */
+  64:Core/Src/main.c **** 
+  65:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  66:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  67:Core/Src/main.c **** 
+  68:Core/Src/main.c **** /* USER CODE END 0 */
+  69:Core/Src/main.c **** /**
+  70:Core/Src/main.c ****   * @brief  The application entry point.
+  71:Core/Src/main.c ****   * @retval int
+  72:Core/Src/main.c ****   */
+  73:Core/Src/main.c **** int main(void)
+  74:Core/Src/main.c **** {
+  75:Core/Src/main.c **** 
+  76:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+  77:Core/Src/main.c **** 
+  78:Core/Src/main.c ****   /* USER CODE END 1 */
+  79:Core/Src/main.c **** 
+  80:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+  81:Core/Src/main.c **** 
+  82:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  83:Core/Src/main.c ****   HAL_Init();
+  84:Core/Src/main.c **** 
+  85:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+  86:Core/Src/main.c **** 
+  87:Core/Src/main.c ****   /* USER CODE END Init */
+  88:Core/Src/main.c **** 
+  89:Core/Src/main.c ****   /* Configure the system clock */
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 3
+
+
+  90:Core/Src/main.c ****   SystemClock_Config();
+  91:Core/Src/main.c **** 
+  92:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+  93:Core/Src/main.c **** 
+  94:Core/Src/main.c ****   /* USER CODE END SysInit */
+  95:Core/Src/main.c **** 
+  96:Core/Src/main.c ****   /* Initialize all configured peripherals */
+  97:Core/Src/main.c ****   MX_GPIO_Init();
+  98:Core/Src/main.c ****   MX_I2C1_Init();
+  99:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 100:Core/Src/main.c **** MPU6050_Init();
+ 101:Core/Src/main.c **** Mahony_Init(&mf, 2.0f, 0.005f);
+ 102:Core/Src/main.c **** uint32_t last_time = HAL_GetTick();
+ 103:Core/Src/main.c **** float dt;
+ 104:Core/Src/main.c ****   /* USER CODE END 2 */
+ 105:Core/Src/main.c **** 
+ 106:Core/Src/main.c ****   /* Infinite loop */
+ 107:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 108:Core/Src/main.c ****   while (1)
+ 109:Core/Src/main.c ****   { 
+ 110:Core/Src/main.c ****     uint32_t now = HAL_GetTick();
+ 111:Core/Src/main.c ****     dt = (now - last_time) / 1000.0f;
+ 112:Core/Src/main.c ****     last_time = now;
+ 113:Core/Src/main.c ****     MPU6050_ReadRawData(AccX_Raw, AccY_Raw, AccZ_Raw, GyroX_Raw, GyroY_Raw, GyroZ_Raw);
+ 114:Core/Src/main.c ****     Ax = AccX_Raw;
+ 115:Core/Src/main.c ****     Ay = AccY_Raw;
+ 116:Core/Src/main.c ****     Az = AccZ_Raw;
+ 117:Core/Src/main.c ****     Gx = GyroX_Raw;
+ 118:Core/Src/main.c ****     Gy = GyroY_Raw;
+ 119:Core/Src/main.c ****     Gz = GyroZ_Raw;
+ 120:Core/Src/main.c ****     Mahony_Update(&mf, Ax, Ay, Az, Gx, Gy, Gz, dt);
+ 121:Core/Src/main.c ****     Pitch = mf.Pitch;
+ 122:Core/Src/main.c ****     Roll = mf.Roll;
+ 123:Core/Src/main.c ****     Yaw = mf.Yaw;
+ 124:Core/Src/main.c **** 
+ 125:Core/Src/main.c ****     HAL_Delay(10);
+ 126:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 127:Core/Src/main.c **** 
+ 128:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 129:Core/Src/main.c ****   }
+ 130:Core/Src/main.c ****   /* USER CODE END 3 */
+ 131:Core/Src/main.c **** }
+ 132:Core/Src/main.c **** 
+ 133:Core/Src/main.c **** /**
+ 134:Core/Src/main.c ****   * @brief System Clock Configuration
+ 135:Core/Src/main.c ****   * @retval None
+ 136:Core/Src/main.c ****   */
+ 137:Core/Src/main.c **** void SystemClock_Config(void)
+ 138:Core/Src/main.c **** {
+ 139:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 140:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 141:Core/Src/main.c **** 
+ 142:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 143:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 144:Core/Src/main.c ****   */
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 4
+
+
+ 147:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+ 148:Core/Src/main.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+ 149:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 150:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 151:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 152:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 153:Core/Src/main.c ****   {
+ 154:Core/Src/main.c ****     Error_Handler();
+ 155:Core/Src/main.c ****   }
+ 156:Core/Src/main.c **** 
+ 157:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 158:Core/Src/main.c ****   */
+ 159:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 160:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 161:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 162:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 163:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 164:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 165:Core/Src/main.c **** 
+ 166:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+ 167:Core/Src/main.c ****   {
+ 168:Core/Src/main.c ****     Error_Handler();
+ 169:Core/Src/main.c ****   }
+ 170:Core/Src/main.c **** }
+ 171:Core/Src/main.c **** 
+ 172:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 173:Core/Src/main.c **** 
+ 174:Core/Src/main.c **** /* USER CODE END 4 */
+ 175:Core/Src/main.c **** 
+ 176:Core/Src/main.c **** /**
+ 177:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 178:Core/Src/main.c ****   * @retval None
+ 179:Core/Src/main.c ****   */
+ 180:Core/Src/main.c **** void Error_Handler(void)
+ 181:Core/Src/main.c **** {
+  27              		.loc 1 181 1 view -0
+  28              		.cfi_startproc
+  29              		@ Volatile: function does not return.
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 182:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 183:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 184:Core/Src/main.c ****   __disable_irq();
+  33              		.loc 1 184 3 view .LVU1
+  34              	.LBB4:
+  35              	.LBI4:
+  36              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 5
+
+
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 6
+
+
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 7
+
+
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+  37              		.loc 2 140 27 view .LVU2
+  38              	.LBB5:
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+  39              		.loc 2 142 3 view .LVU3
+  40              		.syntax unified
+  41              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+  42 0000 72B6     		cpsid i
+  43              	@ 0 "" 2
+  44              		.thumb
+  45              		.syntax unified
+  46              	.L2:
+  47              	.LBE5:
+  48              	.LBE4:
+ 185:Core/Src/main.c ****   while (1)
+  49              		.loc 1 185 3 discriminator 1 view .LVU4
+ 186:Core/Src/main.c ****   {
+ 187:Core/Src/main.c ****   }
+  50              		.loc 1 187 3 discriminator 1 view .LVU5
+ 185:Core/Src/main.c ****   while (1)
+  51              		.loc 1 185 9 discriminator 1 view .LVU6
+  52 0002 FEE7     		b	.L2
+  53              		.cfi_endproc
+  54              	.LFE67:
+  56              		.section	.text.SystemClock_Config,"ax",%progbits
+  57              		.align	1
+  58              		.global	SystemClock_Config
+  59              		.syntax unified
+  60              		.thumb
+  61              		.thumb_func
+  63              	SystemClock_Config:
+  64              	.LFB66:
+ 138:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  65              		.loc 1 138 1 view -0
+  66              		.cfi_startproc
+  67              		@ args = 0, pretend = 0, frame = 64
+  68              		@ frame_needed = 0, uses_anonymous_args = 0
+  69 0000 00B5     		push	{lr}
+  70              	.LCFI0:
+  71              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 8
+
+
+  72              		.cfi_offset 14, -4
+  73 0002 91B0     		sub	sp, sp, #68
+  74              	.LCFI1:
+  75              		.cfi_def_cfa_offset 72
+ 139:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  76              		.loc 1 139 3 view .LVU8
+ 139:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  77              		.loc 1 139 22 is_stmt 0 view .LVU9
+  78 0004 2822     		movs	r2, #40
+  79 0006 0021     		movs	r1, #0
+  80 0008 06A8     		add	r0, sp, #24
+  81 000a FFF7FEFF 		bl	memset
+  82              	.LVL0:
+ 140:Core/Src/main.c **** 
+  83              		.loc 1 140 3 is_stmt 1 view .LVU10
+ 140:Core/Src/main.c **** 
+  84              		.loc 1 140 22 is_stmt 0 view .LVU11
+  85 000e 0023     		movs	r3, #0
+  86 0010 0193     		str	r3, [sp, #4]
+  87 0012 0293     		str	r3, [sp, #8]
+  88 0014 0393     		str	r3, [sp, #12]
+  89 0016 0493     		str	r3, [sp, #16]
+  90 0018 0593     		str	r3, [sp, #20]
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  91              		.loc 1 145 3 is_stmt 1 view .LVU12
+ 145:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  92              		.loc 1 145 36 is_stmt 0 view .LVU13
+  93 001a 0122     		movs	r2, #1
+  94 001c 0692     		str	r2, [sp, #24]
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  95              		.loc 1 146 3 is_stmt 1 view .LVU14
+ 146:Core/Src/main.c ****   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  96              		.loc 1 146 30 is_stmt 0 view .LVU15
+  97 001e 4FF48033 		mov	r3, #65536
+  98 0022 0793     		str	r3, [sp, #28]
+ 147:Core/Src/main.c ****   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  99              		.loc 1 147 3 is_stmt 1 view .LVU16
+ 148:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 100              		.loc 1 148 3 view .LVU17
+ 148:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 101              		.loc 1 148 30 is_stmt 0 view .LVU18
+ 102 0024 0A92     		str	r2, [sp, #40]
+ 149:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 103              		.loc 1 149 3 is_stmt 1 view .LVU19
+ 149:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 104              		.loc 1 149 34 is_stmt 0 view .LVU20
+ 105 0026 0222     		movs	r2, #2
+ 106 0028 0D92     		str	r2, [sp, #52]
+ 150:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 107              		.loc 1 150 3 is_stmt 1 view .LVU21
+ 150:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+ 108              		.loc 1 150 35 is_stmt 0 view .LVU22
+ 109 002a 0E93     		str	r3, [sp, #56]
+ 151:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 110              		.loc 1 151 3 is_stmt 1 view .LVU23
+ 151:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 111              		.loc 1 151 32 is_stmt 0 view .LVU24
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 9
+
+
+ 112 002c 4FF4E013 		mov	r3, #1835008
+ 113 0030 0F93     		str	r3, [sp, #60]
+ 152:Core/Src/main.c ****   {
+ 114              		.loc 1 152 3 is_stmt 1 view .LVU25
+ 152:Core/Src/main.c ****   {
+ 115              		.loc 1 152 7 is_stmt 0 view .LVU26
+ 116 0032 06A8     		add	r0, sp, #24
+ 117 0034 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 118              	.LVL1:
+ 152:Core/Src/main.c ****   {
+ 119              		.loc 1 152 6 view .LVU27
+ 120 0038 80B9     		cbnz	r0, .L7
+ 159:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 121              		.loc 1 159 3 is_stmt 1 view .LVU28
+ 159:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 122              		.loc 1 159 31 is_stmt 0 view .LVU29
+ 123 003a 0F23     		movs	r3, #15
+ 124 003c 0193     		str	r3, [sp, #4]
+ 161:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 125              		.loc 1 161 3 is_stmt 1 view .LVU30
+ 161:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 126              		.loc 1 161 34 is_stmt 0 view .LVU31
+ 127 003e 0221     		movs	r1, #2
+ 128 0040 0291     		str	r1, [sp, #8]
+ 162:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 129              		.loc 1 162 3 is_stmt 1 view .LVU32
+ 162:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+ 130              		.loc 1 162 35 is_stmt 0 view .LVU33
+ 131 0042 0023     		movs	r3, #0
+ 132 0044 0393     		str	r3, [sp, #12]
+ 163:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 133              		.loc 1 163 3 is_stmt 1 view .LVU34
+ 163:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 134              		.loc 1 163 36 is_stmt 0 view .LVU35
+ 135 0046 4FF48062 		mov	r2, #1024
+ 136 004a 0492     		str	r2, [sp, #16]
+ 164:Core/Src/main.c **** 
+ 137              		.loc 1 164 3 is_stmt 1 view .LVU36
+ 164:Core/Src/main.c **** 
+ 138              		.loc 1 164 36 is_stmt 0 view .LVU37
+ 139 004c 0593     		str	r3, [sp, #20]
+ 166:Core/Src/main.c ****   {
+ 140              		.loc 1 166 3 is_stmt 1 view .LVU38
+ 166:Core/Src/main.c ****   {
+ 141              		.loc 1 166 7 is_stmt 0 view .LVU39
+ 142 004e 01A8     		add	r0, sp, #4
+ 143 0050 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 144              	.LVL2:
+ 166:Core/Src/main.c ****   {
+ 145              		.loc 1 166 6 view .LVU40
+ 146 0054 20B9     		cbnz	r0, .L8
+ 170:Core/Src/main.c **** 
+ 147              		.loc 1 170 1 view .LVU41
+ 148 0056 11B0     		add	sp, sp, #68
+ 149              	.LCFI2:
+ 150              		.cfi_remember_state
+ 151              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 10
+
+
+ 152              		@ sp needed
+ 153 0058 5DF804FB 		ldr	pc, [sp], #4
+ 154              	.L7:
+ 155              	.LCFI3:
+ 156              		.cfi_restore_state
+ 154:Core/Src/main.c ****   }
+ 157              		.loc 1 154 5 is_stmt 1 view .LVU42
+ 158 005c FFF7FEFF 		bl	Error_Handler
+ 159              	.LVL3:
+ 160              	.L8:
+ 168:Core/Src/main.c ****   }
+ 161              		.loc 1 168 5 view .LVU43
+ 162 0060 FFF7FEFF 		bl	Error_Handler
+ 163              	.LVL4:
+ 164              		.cfi_endproc
+ 165              	.LFE66:
+ 167              		.global	__aeabi_ui2f
+ 168              		.global	__aeabi_fdiv
+ 169              		.global	__aeabi_i2f
+ 170              		.section	.text.main,"ax",%progbits
+ 171              		.align	1
+ 172              		.global	main
+ 173              		.syntax unified
+ 174              		.thumb
+ 175              		.thumb_func
+ 177              	main:
+ 178              	.LFB65:
+  74:Core/Src/main.c **** 
+ 179              		.loc 1 74 1 view -0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 184              	.LCFI4:
+ 185              		.cfi_def_cfa_offset 36
+ 186              		.cfi_offset 4, -36
+ 187              		.cfi_offset 5, -32
+ 188              		.cfi_offset 6, -28
+ 189              		.cfi_offset 7, -24
+ 190              		.cfi_offset 8, -20
+ 191              		.cfi_offset 9, -16
+ 192              		.cfi_offset 10, -12
+ 193              		.cfi_offset 11, -8
+ 194              		.cfi_offset 14, -4
+ 195 0004 85B0     		sub	sp, sp, #20
+ 196              	.LCFI5:
+ 197              		.cfi_def_cfa_offset 56
+  83:Core/Src/main.c **** 
+ 198              		.loc 1 83 3 view .LVU45
+ 199 0006 FFF7FEFF 		bl	HAL_Init
+ 200              	.LVL5:
+  90:Core/Src/main.c **** 
+ 201              		.loc 1 90 3 view .LVU46
+ 202 000a FFF7FEFF 		bl	SystemClock_Config
+ 203              	.LVL6:
+  97:Core/Src/main.c ****   MX_I2C1_Init();
+ 204              		.loc 1 97 3 view .LVU47
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 11
+
+
+ 205 000e FFF7FEFF 		bl	MX_GPIO_Init
+ 206              	.LVL7:
+  98:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 207              		.loc 1 98 3 view .LVU48
+ 208 0012 FFF7FEFF 		bl	MX_I2C1_Init
+ 209              	.LVL8:
+ 100:Core/Src/main.c **** Mahony_Init(&mf, 2.0f, 0.005f);
+ 210              		.loc 1 100 1 view .LVU49
+ 211 0016 FFF7FEFF 		bl	MPU6050_Init
+ 212              	.LVL9:
+ 101:Core/Src/main.c **** uint32_t last_time = HAL_GetTick();
+ 213              		.loc 1 101 1 view .LVU50
+ 214 001a 384A     		ldr	r2, .L12
+ 215 001c 4FF08041 		mov	r1, #1073741824
+ 216 0020 3748     		ldr	r0, .L12+4
+ 217 0022 FFF7FEFF 		bl	Mahony_Init
+ 218              	.LVL10:
+ 102:Core/Src/main.c **** float dt;
+ 219              		.loc 1 102 1 view .LVU51
+ 102:Core/Src/main.c **** float dt;
+ 220              		.loc 1 102 22 is_stmt 0 view .LVU52
+ 221 0026 FFF7FEFF 		bl	HAL_GetTick
+ 222              	.LVL11:
+ 223 002a 0546     		mov	r5, r0
+ 224              	.LVL12:
+ 225              	.L10:
+ 103:Core/Src/main.c ****   /* USER CODE END 2 */
+ 226              		.loc 1 103 1 is_stmt 1 discriminator 1 view .LVU53
+ 108:Core/Src/main.c ****   { 
+ 227              		.loc 1 108 3 discriminator 1 view .LVU54
+ 228              	.LBB6:
+ 110:Core/Src/main.c ****     dt = (now - last_time) / 1000.0f;
+ 229              		.loc 1 110 5 discriminator 1 view .LVU55
+ 110:Core/Src/main.c ****     dt = (now - last_time) / 1000.0f;
+ 230              		.loc 1 110 20 is_stmt 0 discriminator 1 view .LVU56
+ 231 002c FFF7FEFF 		bl	HAL_GetTick
+ 232              	.LVL13:
+ 233 0030 0446     		mov	r4, r0
+ 234              	.LVL14:
+ 111:Core/Src/main.c ****     last_time = now;
+ 235              		.loc 1 111 5 is_stmt 1 discriminator 1 view .LVU57
+ 111:Core/Src/main.c ****     last_time = now;
+ 236              		.loc 1 111 28 is_stmt 0 discriminator 1 view .LVU58
+ 237 0032 401B     		subs	r0, r0, r5
+ 238              	.LVL15:
+ 111:Core/Src/main.c ****     last_time = now;
+ 239              		.loc 1 111 28 discriminator 1 view .LVU59
+ 240 0034 FFF7FEFF 		bl	__aeabi_ui2f
+ 241              	.LVL16:
+ 111:Core/Src/main.c ****     last_time = now;
+ 242              		.loc 1 111 8 discriminator 1 view .LVU60
+ 243 0038 3249     		ldr	r1, .L12+8
+ 244 003a FFF7FEFF 		bl	__aeabi_fdiv
+ 245              	.LVL17:
+ 246 003e 8346     		mov	fp, r0
+ 247              	.LVL18:
+ 112:Core/Src/main.c ****     MPU6050_ReadRawData(AccX_Raw, AccY_Raw, AccZ_Raw, GyroX_Raw, GyroY_Raw, GyroZ_Raw);
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 12
+
+
+ 248              		.loc 1 112 5 is_stmt 1 discriminator 1 view .LVU61
+ 113:Core/Src/main.c ****     Ax = AccX_Raw;
+ 249              		.loc 1 113 5 discriminator 1 view .LVU62
+ 250 0040 DFF8C490 		ldr	r9, .L12+12
+ 251 0044 DFF8C480 		ldr	r8, .L12+16
+ 252 0048 314F     		ldr	r7, .L12+20
+ 253 004a 324E     		ldr	r6, .L12+24
+ 254 004c 324D     		ldr	r5, .L12+28
+ 255 004e B5F90030 		ldrsh	r3, [r5]
+ 256 0052 0193     		str	r3, [sp, #4]
+ 257 0054 DFF8C4A0 		ldr	r10, .L12+32
+ 258 0058 BAF90030 		ldrsh	r3, [r10]
+ 259 005c 0093     		str	r3, [sp]
+ 260 005e B9F90030 		ldrsh	r3, [r9]
+ 261 0062 B8F90020 		ldrsh	r2, [r8]
+ 262 0066 B7F90010 		ldrsh	r1, [r7]
+ 263 006a B6F90000 		ldrsh	r0, [r6]
+ 264              	.LVL19:
+ 113:Core/Src/main.c ****     Ax = AccX_Raw;
+ 265              		.loc 1 113 5 is_stmt 0 discriminator 1 view .LVU63
+ 266 006e FFF7FEFF 		bl	MPU6050_ReadRawData
+ 267              	.LVL20:
+ 114:Core/Src/main.c ****     Ay = AccY_Raw;
+ 268              		.loc 1 114 5 is_stmt 1 discriminator 1 view .LVU64
+ 114:Core/Src/main.c ****     Ay = AccY_Raw;
+ 269              		.loc 1 114 8 is_stmt 0 discriminator 1 view .LVU65
+ 270 0072 B6F90000 		ldrsh	r0, [r6]
+ 271 0076 FFF7FEFF 		bl	__aeabi_i2f
+ 272              	.LVL21:
+ 273 007a 0646     		mov	r6, r0
+ 274 007c 284B     		ldr	r3, .L12+36
+ 275 007e 1860     		str	r0, [r3]	@ float
+ 115:Core/Src/main.c ****     Az = AccZ_Raw;
+ 276              		.loc 1 115 5 is_stmt 1 discriminator 1 view .LVU66
+ 115:Core/Src/main.c ****     Az = AccZ_Raw;
+ 277              		.loc 1 115 8 is_stmt 0 discriminator 1 view .LVU67
+ 278 0080 B7F90000 		ldrsh	r0, [r7]
+ 279 0084 FFF7FEFF 		bl	__aeabi_i2f
+ 280              	.LVL22:
+ 281 0088 0746     		mov	r7, r0
+ 282 008a 264B     		ldr	r3, .L12+40
+ 283 008c 1860     		str	r0, [r3]	@ float
+ 116:Core/Src/main.c ****     Gx = GyroX_Raw;
+ 284              		.loc 1 116 5 is_stmt 1 discriminator 1 view .LVU68
+ 116:Core/Src/main.c ****     Gx = GyroX_Raw;
+ 285              		.loc 1 116 8 is_stmt 0 discriminator 1 view .LVU69
+ 286 008e B8F90000 		ldrsh	r0, [r8]
+ 287 0092 FFF7FEFF 		bl	__aeabi_i2f
+ 288              	.LVL23:
+ 289 0096 8046     		mov	r8, r0
+ 290 0098 234B     		ldr	r3, .L12+44
+ 291 009a 1860     		str	r0, [r3]	@ float
+ 117:Core/Src/main.c ****     Gy = GyroY_Raw;
+ 292              		.loc 1 117 5 is_stmt 1 discriminator 1 view .LVU70
+ 117:Core/Src/main.c ****     Gy = GyroY_Raw;
+ 293              		.loc 1 117 8 is_stmt 0 discriminator 1 view .LVU71
+ 294 009c B9F90000 		ldrsh	r0, [r9]
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 13
+
+
+ 295 00a0 FFF7FEFF 		bl	__aeabi_i2f
+ 296              	.LVL24:
+ 297 00a4 8146     		mov	r9, r0
+ 298 00a6 214B     		ldr	r3, .L12+48
+ 299 00a8 1860     		str	r0, [r3]	@ float
+ 118:Core/Src/main.c ****     Gz = GyroZ_Raw;
+ 300              		.loc 1 118 5 is_stmt 1 discriminator 1 view .LVU72
+ 118:Core/Src/main.c ****     Gz = GyroZ_Raw;
+ 301              		.loc 1 118 8 is_stmt 0 discriminator 1 view .LVU73
+ 302 00aa BAF90000 		ldrsh	r0, [r10]
+ 303 00ae FFF7FEFF 		bl	__aeabi_i2f
+ 304              	.LVL25:
+ 305 00b2 8246     		mov	r10, r0
+ 306 00b4 1E4B     		ldr	r3, .L12+52
+ 307 00b6 1860     		str	r0, [r3]	@ float
+ 119:Core/Src/main.c ****     Mahony_Update(&mf, Ax, Ay, Az, Gx, Gy, Gz, dt);
+ 308              		.loc 1 119 5 is_stmt 1 discriminator 1 view .LVU74
+ 119:Core/Src/main.c ****     Mahony_Update(&mf, Ax, Ay, Az, Gx, Gy, Gz, dt);
+ 309              		.loc 1 119 8 is_stmt 0 discriminator 1 view .LVU75
+ 310 00b8 B5F90000 		ldrsh	r0, [r5]
+ 311 00bc FFF7FEFF 		bl	__aeabi_i2f
+ 312              	.LVL26:
+ 313 00c0 1C4B     		ldr	r3, .L12+56
+ 314 00c2 1860     		str	r0, [r3]	@ float
+ 120:Core/Src/main.c ****     Pitch = mf.Pitch;
+ 315              		.loc 1 120 5 is_stmt 1 discriminator 1 view .LVU76
+ 316 00c4 0E4D     		ldr	r5, .L12+4
+ 317 00c6 CDF80CB0 		str	fp, [sp, #12]	@ float
+ 318 00ca 0290     		str	r0, [sp, #8]	@ float
+ 319 00cc CDF804A0 		str	r10, [sp, #4]	@ float
+ 320 00d0 CDF80090 		str	r9, [sp]	@ float
+ 321 00d4 4346     		mov	r3, r8
+ 322 00d6 3A46     		mov	r2, r7
+ 323 00d8 3146     		mov	r1, r6
+ 324 00da 2846     		mov	r0, r5
+ 325 00dc FFF7FEFF 		bl	Mahony_Update
+ 326              	.LVL27:
+ 121:Core/Src/main.c ****     Roll = mf.Roll;
+ 327              		.loc 1 121 5 discriminator 1 view .LVU77
+ 121:Core/Src/main.c ****     Roll = mf.Roll;
+ 328              		.loc 1 121 15 is_stmt 0 discriminator 1 view .LVU78
+ 329 00e0 6A6A     		ldr	r2, [r5, #36]	@ float
+ 121:Core/Src/main.c ****     Roll = mf.Roll;
+ 330              		.loc 1 121 11 discriminator 1 view .LVU79
+ 331 00e2 154B     		ldr	r3, .L12+60
+ 332 00e4 1A60     		str	r2, [r3]	@ float
+ 122:Core/Src/main.c ****     Yaw = mf.Yaw;
+ 333              		.loc 1 122 5 is_stmt 1 discriminator 1 view .LVU80
+ 122:Core/Src/main.c ****     Yaw = mf.Yaw;
+ 334              		.loc 1 122 14 is_stmt 0 discriminator 1 view .LVU81
+ 335 00e6 AA6A     		ldr	r2, [r5, #40]	@ float
+ 122:Core/Src/main.c ****     Yaw = mf.Yaw;
+ 336              		.loc 1 122 10 discriminator 1 view .LVU82
+ 337 00e8 144B     		ldr	r3, .L12+64
+ 338 00ea 1A60     		str	r2, [r3]	@ float
+ 123:Core/Src/main.c **** 
+ 339              		.loc 1 123 5 is_stmt 1 discriminator 1 view .LVU83
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 14
+
+
+ 123:Core/Src/main.c **** 
+ 340              		.loc 1 123 13 is_stmt 0 discriminator 1 view .LVU84
+ 341 00ec EA6A     		ldr	r2, [r5, #44]	@ float
+ 123:Core/Src/main.c **** 
+ 342              		.loc 1 123 9 discriminator 1 view .LVU85
+ 343 00ee 144B     		ldr	r3, .L12+68
+ 344 00f0 1A60     		str	r2, [r3]	@ float
+ 125:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 345              		.loc 1 125 5 is_stmt 1 discriminator 1 view .LVU86
+ 346 00f2 0A20     		movs	r0, #10
+ 347 00f4 FFF7FEFF 		bl	HAL_Delay
+ 348              	.LVL28:
+ 349              	.LBE6:
+ 108:Core/Src/main.c ****   { 
+ 350              		.loc 1 108 9 discriminator 1 view .LVU87
+ 351              	.LBB7:
+ 112:Core/Src/main.c ****     MPU6050_ReadRawData(AccX_Raw, AccY_Raw, AccZ_Raw, GyroX_Raw, GyroY_Raw, GyroZ_Raw);
+ 352              		.loc 1 112 15 is_stmt 0 discriminator 1 view .LVU88
+ 353 00f8 2546     		mov	r5, r4
+ 354 00fa 97E7     		b	.L10
+ 355              	.L13:
+ 356              		.align	2
+ 357              	.L12:
+ 358 00fc 0AD7A33B 		.word	1000593162
+ 359 0100 00000000 		.word	mf
+ 360 0104 00007A44 		.word	1148846080
+ 361 0108 00000000 		.word	GyroX_Raw
+ 362 010c 00000000 		.word	AccZ_Raw
+ 363 0110 00000000 		.word	AccY_Raw
+ 364 0114 00000000 		.word	AccX_Raw
+ 365 0118 00000000 		.word	GyroZ_Raw
+ 366 011c 00000000 		.word	GyroY_Raw
+ 367 0120 00000000 		.word	Ax
+ 368 0124 00000000 		.word	Ay
+ 369 0128 00000000 		.word	Az
+ 370 012c 00000000 		.word	Gx
+ 371 0130 00000000 		.word	Gy
+ 372 0134 00000000 		.word	Gz
+ 373 0138 00000000 		.word	Pitch
+ 374 013c 00000000 		.word	Roll
+ 375 0140 00000000 		.word	Yaw
+ 376              	.LBE7:
+ 377              		.cfi_endproc
+ 378              	.LFE65:
+ 380              		.global	mf
+ 381              		.section	.bss.mf,"aw",%nobits
+ 382              		.align	2
+ 385              	mf:
+ 386 0000 00000000 		.space	48
+ 386      00000000 
+ 386      00000000 
+ 386      00000000 
+ 386      00000000 
+ 387              		.global	Gz
+ 388              		.section	.bss.Gz,"aw",%nobits
+ 389              		.align	2
+ 392              	Gz:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 15
+
+
+ 393 0000 00000000 		.space	4
+ 394              		.global	Gy
+ 395              		.section	.bss.Gy,"aw",%nobits
+ 396              		.align	2
+ 399              	Gy:
+ 400 0000 00000000 		.space	4
+ 401              		.global	Gx
+ 402              		.section	.bss.Gx,"aw",%nobits
+ 403              		.align	2
+ 406              	Gx:
+ 407 0000 00000000 		.space	4
+ 408              		.global	Az
+ 409              		.section	.bss.Az,"aw",%nobits
+ 410              		.align	2
+ 413              	Az:
+ 414 0000 00000000 		.space	4
+ 415              		.global	Ay
+ 416              		.section	.bss.Ay,"aw",%nobits
+ 417              		.align	2
+ 420              	Ay:
+ 421 0000 00000000 		.space	4
+ 422              		.global	Ax
+ 423              		.section	.bss.Ax,"aw",%nobits
+ 424              		.align	2
+ 427              	Ax:
+ 428 0000 00000000 		.space	4
+ 429              		.global	GyroZ_Raw
+ 430              		.section	.bss.GyroZ_Raw,"aw",%nobits
+ 431              		.align	1
+ 434              	GyroZ_Raw:
+ 435 0000 0000     		.space	2
+ 436              		.global	GyroY_Raw
+ 437              		.section	.bss.GyroY_Raw,"aw",%nobits
+ 438              		.align	1
+ 441              	GyroY_Raw:
+ 442 0000 0000     		.space	2
+ 443              		.global	GyroX_Raw
+ 444              		.section	.bss.GyroX_Raw,"aw",%nobits
+ 445              		.align	1
+ 448              	GyroX_Raw:
+ 449 0000 0000     		.space	2
+ 450              		.global	AccZ_Raw
+ 451              		.section	.bss.AccZ_Raw,"aw",%nobits
+ 452              		.align	1
+ 455              	AccZ_Raw:
+ 456 0000 0000     		.space	2
+ 457              		.global	AccY_Raw
+ 458              		.section	.bss.AccY_Raw,"aw",%nobits
+ 459              		.align	1
+ 462              	AccY_Raw:
+ 463 0000 0000     		.space	2
+ 464              		.global	AccX_Raw
+ 465              		.section	.bss.AccX_Raw,"aw",%nobits
+ 466              		.align	1
+ 469              	AccX_Raw:
+ 470 0000 0000     		.space	2
+ 471              		.global	Yaw
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 16
+
+
+ 472              		.section	.bss.Yaw,"aw",%nobits
+ 473              		.align	2
+ 476              	Yaw:
+ 477 0000 00000000 		.space	4
+ 478              		.global	Roll
+ 479              		.section	.bss.Roll,"aw",%nobits
+ 480              		.align	2
+ 483              	Roll:
+ 484 0000 00000000 		.space	4
+ 485              		.global	Pitch
+ 486              		.section	.bss.Pitch,"aw",%nobits
+ 487              		.align	2
+ 490              	Pitch:
+ 491 0000 00000000 		.space	4
+ 492              		.text
+ 493              	.Letext0:
+ 494              		.file 3 "d:\\rw\\ozone\\mingw64\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 495              		.file 4 "d:\\rw\\ozone\\mingw64\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 496              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 497              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h"
+ 498              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h"
+ 499              		.file 8 "Application/MPU6050.h"
+ 500              		.file 9 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 501              		.file 10 "Core/Inc/i2c.h"
+ 502              		.file 11 "Core/Inc/gpio.h"
+ 503              		.file 12 "<built-in>"
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:19     .text.Error_Handler:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:25     .text.Error_Handler:00000000 Error_Handler
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:57     .text.SystemClock_Config:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:63     .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:171    .text.main:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:177    .text.main:00000000 main
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:358    .text.main:000000fc $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:385    .bss.mf:00000000 mf
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:448    .bss.GyroX_Raw:00000000 GyroX_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:455    .bss.AccZ_Raw:00000000 AccZ_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:462    .bss.AccY_Raw:00000000 AccY_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:469    .bss.AccX_Raw:00000000 AccX_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:434    .bss.GyroZ_Raw:00000000 GyroZ_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:441    .bss.GyroY_Raw:00000000 GyroY_Raw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:427    .bss.Ax:00000000 Ax
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:420    .bss.Ay:00000000 Ay
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:413    .bss.Az:00000000 Az
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:406    .bss.Gx:00000000 Gx
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:399    .bss.Gy:00000000 Gy
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:392    .bss.Gz:00000000 Gz
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:490    .bss.Pitch:00000000 Pitch
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:483    .bss.Roll:00000000 Roll
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:476    .bss.Yaw:00000000 Yaw
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:382    .bss.mf:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:389    .bss.Gz:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:396    .bss.Gy:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:403    .bss.Gx:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:410    .bss.Az:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:417    .bss.Ay:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:424    .bss.Ax:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:431    .bss.GyroZ_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:438    .bss.GyroY_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:445    .bss.GyroX_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:452    .bss.AccZ_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:459    .bss.AccY_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:466    .bss.AccX_Raw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:473    .bss.Yaw:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:480    .bss.Roll:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s:487    .bss.Pitch:00000000 $d
+
+UNDEFINED SYMBOLS
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+__aeabi_ui2f
+__aeabi_fdiv
+__aeabi_i2f
+HAL_Init
+MX_GPIO_Init
+MX_I2C1_Init
+MPU6050_Init
+Mahony_Init
+HAL_GetTick
+MPU6050_ReadRawData
+Mahony_Update
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccpZ43pz.s 			page 18
+
+
+HAL_Delay
