@@ -29,7 +29,7 @@ void MPU6050_Init(void);
 void MPU6050_ReadRawData(MahonyFilter *m);
 void MahonyAHRSupdateIMU(MahonyFilter *m,float *q);
 float invSqrt(float x);
-void conculate(void);
+void calculate(void);
 #ifdef __cplusplus
 }
 #endif

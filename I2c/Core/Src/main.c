@@ -25,7 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include "mpu6050.h"
 #ifndef M_PI
-#define M_PI 3.14159265358979323846f;
+#define M_PI 3.14159265358979323846f
 #endif
 /* USER CODE END Includes */
 
@@ -51,8 +51,6 @@ float Pitch = 0.0f; // 俯仰
 float Roll = 0.0f;  // 横滚
 float Yaw = 0.0f;   // 偏航
 float Ax, Ay, Az, Gx, Gy, Gz;
-
-mn m;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,10 +104,8 @@ int main(void)
   { 
   //  MPU6050_ReadRawData(&mf);
    // float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};  // 初始化四元数
-     conculate();
-    
-
-    HAL_Delay(10);
+     calculate();
+    HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

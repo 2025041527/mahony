@@ -28,10 +28,10 @@ void MPU6050_Init(void) {
 void MPU6050_ReadRawData(MahonyFilter *m) {
     uint8_t buf[14];
     HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H, 1, buf, 14, HAL_MAX_DELAY);
-    m->AccX_Raw = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f; // 转换为g
+    m->AccX_Raw = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f;
     m->AccY_Raw = (int16_t)((buf[2] << 8) | buf[3])/ 16384.0f; 
     m->AccZ_Raw = (int16_t)((buf[4] << 8) | buf[5])/ 16384.0f; 
-    m->GyroX_Raw = ((int16_t)((buf[8] << 8) | buf[9])/ 131.0f)/57.3; // 转换为°/s
+    m->GyroX_Raw = ((int16_t)((buf[8] << 8) | buf[9])/ 131.0f)/57.3;
     m->GyroY_Raw = ((int16_t)((buf[10] << 8) | buf[11])/ 131.0f)/57.3;
     m->GyroZ_Raw = ((int16_t)((buf[12] << 8) | buf[13])/ 131.0f)/57.3;
 }
@@ -138,7 +138,7 @@ void MahonyAHRSupdateIMU(MahonyFilter *m,float *q) {
 	q[2] *= recipNorm;
 	q[3] *= recipNorm;}
     
-void conculate(void)
+void calculate(void)
 {
 	MPU6050_ReadRawData(&mf);
 	MahonyAHRSupdateIMU(&mf, q);
