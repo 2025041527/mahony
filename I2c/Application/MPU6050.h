@@ -15,14 +15,21 @@ extern "C" {
 #define ACCEL_XOUT_H  0x3B
 
 typedef struct {
-    float Pitch, Roll, Yaw;
+    
+	  float AccX_Raw, AccY_Raw, AccZ_Raw;
+    float GyroX_Raw, GyroY_Raw, GyroZ_Raw;
 } MahonyFilter;
 
+typedef struct {
+float Pitch, Roll, Yaw;
+
+}mn;
 /* 函数声明 */
 void MPU6050_Init(void);
-void MPU6050_ReadRawData(int16_t AccX,int16_t AccY, int16_t AccZ, int16_t GyroX,int16_t GyroY,int16_t GyroZ);
-void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float gz, float ax, float ay, float az);
+void MPU6050_ReadRawData(MahonyFilter *m);
+void MahonyAHRSupdateIMU(MahonyFilter *m,float *q);
 float invSqrt(float x);
+void conculate(void);
 #ifdef __cplusplus
 }
 #endif

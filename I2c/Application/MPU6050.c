@@ -1,13 +1,15 @@
 #include "MPU6050.h"
 #include <math.h>
+#include "main.h"
 extern I2C_HandleTypeDef hi2c1;
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
 #define sampleFreq	1000.0f			// sample frequency in Hz
-#define twoKpDef	(2.0f * 0.5f)	// 2 * proportional gain
-#define twoKiDef	(2.0f * 0.0f)	// 2 * integral gain
-
+#define twoKpDef	(2.0f * 20.75f)	// 2 * proportional gain
+#define twoKiDef	(2.0f * 0.001f)	// 2 * integral gain
+mn n;
+MahonyFilter mf;
 void MPU6050_Init(void) {
     uint8_t data = 0;
     // 唤醒MPU6050
@@ -16,26 +18,24 @@ void MPU6050_Init(void) {
     // 配置加速度计量程：±2g
     data = 0x00;
     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, ACCEL_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
-    // 配置陀螺仪量程：±250°/s
+    // 配置陀螺仪量程：±250°/s 
     data = 0x00;
     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, GYRO_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
 }
 
 
-void MPU6050_ReadRawData(int16_t AccX, int16_t AccY, int16_t AccZ, 
-                          int16_t GyroX, int16_t GyroY, int16_t GyroZ) {
+
+void MPU6050_ReadRawData(MahonyFilter *m) {
     uint8_t buf[14];
     HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H, 1, buf, 14, HAL_MAX_DELAY);
-    AccX = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f; // 转换为g
-    AccY = (int16_t)((buf[2] << 8) | buf[3])/ 16384.0f; 
-    AccZ = (int16_t)((buf[4] << 8) | buf[5])/ 16384.0f; 
-    GyroX = (int16_t)((buf[8] << 8) | buf[9])/ 131.0f; // 转换为°/s
-    GyroY = (int16_t)((buf[10] << 8) | buf[11])/ 131.0f;
-    GyroZ = (int16_t)((buf[12] << 8) | buf[13])/ 131.0f;
+    m->AccX_Raw = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f; // 转换为g
+    m->AccY_Raw = (int16_t)((buf[2] << 8) | buf[3])/ 16384.0f; 
+    m->AccZ_Raw = (int16_t)((buf[4] << 8) | buf[5])/ 16384.0f; 
+    m->GyroX_Raw = ((int16_t)((buf[8] << 8) | buf[9])/ 131.0f)/57.3; // 转换为°/s
+    m->GyroY_Raw = ((int16_t)((buf[10] << 8) | buf[11])/ 131.0f)/57.3;
+    m->GyroZ_Raw = ((int16_t)((buf[12] << 8) | buf[13])/ 131.0f)/57.3;
 }
 
-volatile float twoKp = twoKpDef;											// 2 * proportional gain (Kp)
-volatile float twoKi = twoKiDef;											// 2 * integral gain (Ki)
 //volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms scaled by Ki
 float invSqrt(float x) {
@@ -48,12 +48,20 @@ float invSqrt(float x) {
     y = y * (1.5f - x2 * y * y);
     return y;
 }
-void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float gz, float ax, float ay, float az) {
+
+float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
+void MahonyAHRSupdateIMU(MahonyFilter *m,float *q) {
 	float recipNorm;
 	float halfvx, halfvy, halfvz;
 	float halfex, halfey, halfez;
 	float qa, qb, qc;
-
+  float  gx,  gy,  gz,  ax,  ay,  az;
+	  ax = m->AccX_Raw;
+    ay = m->AccY_Raw;
+    az = m->AccZ_Raw;
+    gx = m->GyroX_Raw;
+    gy = m->GyroY_Raw;
+    gz = m->GyroZ_Raw;
 	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisation)
     // 只在加速度计数据有效时才进行运算
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
@@ -81,12 +89,12 @@ void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float
 
 		// Compute and apply integral feedback if enabled
         // 在PI补偿器中积分项使能情况下计算并应用积分项
-		if(twoKi > 0.0f) {
+		if(twoKiDef > 0.0f) {
             // integral error scaled by Ki
             // 积分过程
-			integralFBx += twoKi * halfex * (1.0f / sampleFreq);	
-			integralFBy += twoKi * halfey * (1.0f / sampleFreq);
-			integralFBz += twoKi * halfez * (1.0f / sampleFreq);
+			integralFBx += twoKiDef * halfex * (1.0f / sampleFreq);	
+			integralFBy += twoKiDef * halfey * (1.0f / sampleFreq);
+			integralFBz += twoKiDef * halfez * (1.0f / sampleFreq);
             
             // apply integral feedback
             // 应用误差补偿中的积分项
@@ -104,9 +112,9 @@ void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float
 
 		// Apply proportional feedback
         // 应用误差补偿中的比例项
-		gx += twoKp * halfex;
-		gy += twoKp * halfey;
-		gz += twoKp * halfez;
+		gx += twoKpDef * halfex;
+		gy += twoKpDef * halfey;
+		gz += twoKpDef * halfez;
 	}
 	
 	// Integrate rate of change of quaternion
@@ -128,12 +136,13 @@ void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float
 	q[0] *= recipNorm;
 	q[1] *= recipNorm;
 	q[2] *= recipNorm;
-	q[3] *= recipNorm;
+	q[3] *= recipNorm;}
     
-
-    mf->Pitch = asinf(-2.0f * (q[1]*q[3] - q[0]*q[2])) * 180.0f / M_PI;
-    mf->Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), 
-                      q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]) * 180.0f / M_PI;
-    mf->Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), 
-                     q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]) * 180.0f / M_PI;
+void conculate(void)
+{
+	MPU6050_ReadRawData(&mf);
+	MahonyAHRSupdateIMU(&mf, q);
+    n.Pitch = asinf(-2.0f * (q[1]*q[3] + q[0]*q[2])) * 180.0f / M_PI;
+    n.Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]) * 180.0f / M_PI;
+    n.Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]) * 180.0f / M_PI;
 }

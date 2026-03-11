@@ -20,10 +20,10 @@
 #include "main.h"
 #include "i2c.h"
 #include "gpio.h"
-#include "MPU6050.h"
-#include "math.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "mpu6050.h"
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f;
 #endif
@@ -47,13 +47,12 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-float Pitch = 0.0f; // 俯仰角
-float Roll = 0.0f;  // 横滚角
-float Yaw = 0.0f;   // 偏航角
-int16_t AccX_Raw, AccY_Raw, AccZ_Raw;
-int16_t GyroX_Raw, GyroY_Raw, GyroZ_Raw;
+float Pitch = 0.0f; // 俯仰
+float Roll = 0.0f;  // 横滚
+float Yaw = 0.0f;   // 偏航
 float Ax, Ay, Az, Gx, Gy, Gz;
-MahonyFilter mf;
+
+mn m;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,6 +65,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
+
 /**
   * @brief  The application entry point.
   * @retval int
@@ -104,18 +104,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   { 
-    MPU6050_ReadRawData(AccX_Raw, AccY_Raw, AccZ_Raw, GyroX_Raw, GyroY_Raw, GyroZ_Raw);
-    Ax = AccX_Raw;
-    Ay = AccY_Raw;
-    Az = AccZ_Raw;
-    Gx = GyroX_Raw;
-    Gy = GyroY_Raw;
-    Gz = GyroZ_Raw;
-    float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};  // 初始化四元数
-    MahonyAHRSupdateIMU(&mf, q, Gx, Gy, Gz, Ax, Ay, Az);
-    Pitch = mf.Pitch;
-    Roll = mf.Roll;
-    Yaw = mf.Yaw;
+  //  MPU6050_ReadRawData(&mf);
+   // float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};  // 初始化四元数
+     conculate();
+    
 
     HAL_Delay(10);
     /* USER CODE END WHILE */

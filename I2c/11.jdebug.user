@@ -1,0 +1,27 @@
+
+GraphedExpression="Pitch", Color=#a00909
+GraphedExpression="Roll", Color=#09a01b
+GraphedExpression="Yaw", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#09a087
+GraphedExpression="AccX_Raw", Color=#0984a0
+GraphedExpression="AccY_Raw", Color=#0964a0
+GraphedExpression="AccZ_Raw", Color=#094fa0
+OpenDocument="main.c", FilePath="D:/New Folder/mahony/I2c/Core/Src/main.c", Line=0
+OpenToolbar="Debug", Floating=0, x=0, y=0
+OpenWindow="Call Stack", DockArea=BOTTOM, x=0, y=0, w=868, h=395, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=1, y=0, w=1051, h=395, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x200004D8
+OpenWindow="Watched Data 1", DockArea=LEFT, x=0, y=0, w=484, h=649, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Data Sampling", DockArea=RIGHT, x=0, y=1, w=878, h=291, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
+OpenWindow="Timeline", DockArea=RIGHT, x=0, y=0, w=878, h=357, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="1 ns / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="705;0", PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="677;0", CodeGraphLegendShown=0, CodeGraphLegendPosition="691;0"
+TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[100;100;100;100;112;356]
+TableHeader="Data Sampling Table", SortCol="Index", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" Pitch";" Roll";" Yaw";" AccX_Raw";" AccY_Raw";" AccZ_Raw"], ColWidths=[100;100;100;100;100;100;100;100]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[100;100;100;100;100;100;100;107;107]
+TableHeader="Power Sampling", SortCol="Index", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[100;100;100;184]
+TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
+TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[26;26;26;26]
+WatchedExpression="AccX_Raw", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="AccY_Raw", RefreshRate=5, Window=Watched Data 1
+WatchedExpression="AccZ_Raw", Window=Watched Data 1
+WatchedExpression="Pitch", Window=Watched Data 1
+WatchedExpression="Roll", Window=Watched Data 1
+WatchedExpression="Yaw", Window=Watched Data 1
