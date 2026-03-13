@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -28,16 +28,18 @@ ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
   26              	.LFB65:
    1:Application/MPU6050.c **** #include "MPU6050.h"
    2:Application/MPU6050.c **** #include <math.h>
-   3:Application/MPU6050.c **** extern I2C_HandleTypeDef hi2c1;
-   4:Application/MPU6050.c **** #ifndef M_PI
-   5:Application/MPU6050.c **** #define M_PI 3.14159265358979323846f
-   6:Application/MPU6050.c **** #endif
-   7:Application/MPU6050.c **** #define sampleFreq	1000.0f			// sample frequency in Hz
-   8:Application/MPU6050.c **** #define twoKpDef	(2.0f * 0.5f)	// 2 * proportional gain
-   9:Application/MPU6050.c **** #define twoKiDef	(2.0f * 0.0f)	// 2 * integral gain
-  10:Application/MPU6050.c **** 
-  11:Application/MPU6050.c **** void MPU6050_Init(void) {
-  27              		.loc 1 11 25 view -0
+   3:Application/MPU6050.c **** #include "main.h"
+   4:Application/MPU6050.c **** extern I2C_HandleTypeDef hi2c1;
+   5:Application/MPU6050.c **** #ifndef M_PI
+   6:Application/MPU6050.c **** #define M_PI 3.14159265358979323846f
+   7:Application/MPU6050.c **** #endif
+   8:Application/MPU6050.c **** #define sampleFreq	1000.0f			// sample frequency in Hz
+   9:Application/MPU6050.c **** #define twoKpDef	(2.0f * 20.75f)	// 2 * proportional gain
+  10:Application/MPU6050.c **** #define twoKiDef	(2.0f * 0.001f)	// 2 * integral gain
+  11:Application/MPU6050.c **** mn n;
+  12:Application/MPU6050.c **** MahonyFilter mf;
+  13:Application/MPU6050.c **** void MPU6050_Init(void) {
+  27              		.loc 1 13 25 view -0
   28              		.cfi_startproc
   29              		@ args = 0, pretend = 0, frame = 8
   30              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -53,19 +55,19 @@ ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
   40 0004 86B0     		sub	sp, sp, #24
   41              	.LCFI1:
   42              		.cfi_def_cfa_offset 48
-  12:Application/MPU6050.c ****     uint8_t data = 0;
-  43              		.loc 1 12 5 view .LVU1
-  44              		.loc 1 12 13 is_stmt 0 view .LVU2
+  14:Application/MPU6050.c ****     uint8_t data = 0;
+  43              		.loc 1 14 5 view .LVU1
+  44              		.loc 1 14 13 is_stmt 0 view .LVU2
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 2
+
+
   45 0006 4FF00008 		mov	r8, #0
   46 000a 8DF81780 		strb	r8, [sp, #23]
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 2
-
-
-  13:Application/MPU6050.c ****     // 唤醒MPU6050
-  14:Application/MPU6050.c ****     data = 0x00;
-  47              		.loc 1 14 5 is_stmt 1 view .LVU3
-  15:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, PWR_MGMT_1, 1, &data, 1, HAL_MAX_DELAY);
-  48              		.loc 1 15 5 view .LVU4
+  15:Application/MPU6050.c ****     // 唤醒MPU6050
+  16:Application/MPU6050.c ****     data = 0x00;
+  47              		.loc 1 16 5 is_stmt 1 view .LVU3
+  17:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, PWR_MGMT_1, 1, &data, 1, HAL_MAX_DELAY);
+  48              		.loc 1 17 5 view .LVU4
   49 000e 144D     		ldr	r5, .L3
   50 0010 4FF0FF37 		mov	r7, #-1
   51 0014 0297     		str	r7, [sp, #8]
@@ -79,13 +81,13 @@ ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
   59 0026 2846     		mov	r0, r5
   60 0028 FFF7FEFF 		bl	HAL_I2C_Mem_Write
   61              	.LVL0:
-  16:Application/MPU6050.c ****     // 配置加速度计量程：±2g
-  17:Application/MPU6050.c ****     data = 0x00;
-  62              		.loc 1 17 5 view .LVU5
-  63              		.loc 1 17 10 is_stmt 0 view .LVU6
+  18:Application/MPU6050.c ****     // 配置加速度计量程：±2g
+  19:Application/MPU6050.c ****     data = 0x00;
+  62              		.loc 1 19 5 view .LVU5
+  63              		.loc 1 19 10 is_stmt 0 view .LVU6
   64 002c 8DF81780 		strb	r8, [sp, #23]
-  18:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, ACCEL_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
-  65              		.loc 1 18 5 is_stmt 1 view .LVU7
+  20:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, ACCEL_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
+  65              		.loc 1 20 5 is_stmt 1 view .LVU7
   66 0030 0297     		str	r7, [sp, #8]
   67 0032 0194     		str	r4, [sp, #4]
   68 0034 0096     		str	r6, [sp]
@@ -95,13 +97,13 @@ ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
   72 003c 2846     		mov	r0, r5
   73 003e FFF7FEFF 		bl	HAL_I2C_Mem_Write
   74              	.LVL1:
-  19:Application/MPU6050.c ****     // 配置陀螺仪量程：±250°/s 
-  20:Application/MPU6050.c ****     data = 0x00;
-  75              		.loc 1 20 5 view .LVU8
-  76              		.loc 1 20 10 is_stmt 0 view .LVU9
+  21:Application/MPU6050.c ****     // 配置陀螺仪量程：±250°/s 
+  22:Application/MPU6050.c ****     data = 0x00;
+  75              		.loc 1 22 5 view .LVU8
+  76              		.loc 1 22 10 is_stmt 0 view .LVU9
   77 0042 8DF81780 		strb	r8, [sp, #23]
-  21:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, GYRO_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
-  78              		.loc 1 21 5 is_stmt 1 view .LVU10
+  23:Application/MPU6050.c ****     HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, GYRO_CONFIG, 1, &data, 1, HAL_MAX_DELAY);
+  78              		.loc 1 23 5 is_stmt 1 view .LVU10
   79 0046 0297     		str	r7, [sp, #8]
   80 0048 0194     		str	r4, [sp, #4]
   81 004a 0096     		str	r6, [sp]
@@ -111,1393 +113,1526 @@ ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 1
   85 0052 2846     		mov	r0, r5
   86 0054 FFF7FEFF 		bl	HAL_I2C_Mem_Write
   87              	.LVL2:
-  22:Application/MPU6050.c **** }
-  88              		.loc 1 22 1 is_stmt 0 view .LVU11
+  24:Application/MPU6050.c **** }
+  88              		.loc 1 24 1 is_stmt 0 view .LVU11
   89 0058 06B0     		add	sp, sp, #24
   90              	.LCFI2:
   91              		.cfi_def_cfa_offset 24
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 3
+
+
   92              		@ sp needed
   93 005a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 3
-
-
   94              	.L4:
   95 005e 00BF     		.align	2
   96              	.L3:
   97 0060 00000000 		.word	hi2c1
   98              		.cfi_endproc
   99              	.LFE65:
- 101              		.section	.text.MPU6050_ReadRawData,"ax",%progbits
- 102              		.align	1
- 103              		.global	MPU6050_ReadRawData
- 104              		.syntax unified
- 105              		.thumb
- 106              		.thumb_func
- 108              	MPU6050_ReadRawData:
- 109              	.LVL3:
- 110              	.LFB66:
-  23:Application/MPU6050.c **** 
-  24:Application/MPU6050.c **** 
-  25:Application/MPU6050.c **** void MPU6050_ReadRawData(int16_t AccX, int16_t AccY, int16_t AccZ, 
-  26:Application/MPU6050.c ****                           int16_t GyroX, int16_t GyroY, int16_t GyroZ) {
- 111              		.loc 1 26 72 is_stmt 1 view -0
- 112              		.cfi_startproc
- 113              		@ args = 8, pretend = 0, frame = 16
- 114              		@ frame_needed = 0, uses_anonymous_args = 0
- 115              		.loc 1 26 72 is_stmt 0 view .LVU13
- 116 0000 00B5     		push	{lr}
- 117              	.LCFI3:
- 118              		.cfi_def_cfa_offset 4
- 119              		.cfi_offset 14, -4
- 120 0002 89B0     		sub	sp, sp, #36
- 121              	.LCFI4:
- 122              		.cfi_def_cfa_offset 40
-  27:Application/MPU6050.c ****     uint8_t buf[14];
- 123              		.loc 1 27 5 is_stmt 1 view .LVU14
-  28:Application/MPU6050.c ****     HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H, 1, buf, 14, HAL_MAX_DELAY);
- 124              		.loc 1 28 5 view .LVU15
- 125 0004 4FF0FF33 		mov	r3, #-1
- 126              	.LVL4:
- 127              		.loc 1 28 5 is_stmt 0 view .LVU16
- 128 0008 0293     		str	r3, [sp, #8]
- 129 000a 0E23     		movs	r3, #14
- 130 000c 0193     		str	r3, [sp, #4]
- 131 000e 04AB     		add	r3, sp, #16
- 132 0010 0093     		str	r3, [sp]
- 133 0012 0123     		movs	r3, #1
- 134 0014 3B22     		movs	r2, #59
- 135              	.LVL5:
- 136              		.loc 1 28 5 view .LVU17
- 137 0016 D021     		movs	r1, #208
- 138              	.LVL6:
- 139              		.loc 1 28 5 view .LVU18
- 140 0018 0248     		ldr	r0, .L7
- 141              	.LVL7:
- 142              		.loc 1 28 5 view .LVU19
- 143 001a FFF7FEFF 		bl	HAL_I2C_Mem_Read
- 144              	.LVL8:
-  29:Application/MPU6050.c ****     AccX = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f; // 转换为g
- 145              		.loc 1 29 5 is_stmt 1 view .LVU20
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 4
+ 101              		.global	__aeabi_i2f
+ 102              		.global	__aeabi_fmul
+ 103              		.global	__aeabi_fdiv
+ 104              		.global	__aeabi_f2d
+ 105              		.global	__aeabi_ddiv
+ 106              		.global	__aeabi_d2f
+ 107              		.section	.text.MPU6050_ReadRawData,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	MPU6050_ReadRawData
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 114              	MPU6050_ReadRawData:
+ 115              	.LVL3:
+ 116              	.LFB66:
+  25:Application/MPU6050.c **** 
+  26:Application/MPU6050.c **** 
+  27:Application/MPU6050.c **** 
+  28:Application/MPU6050.c **** void MPU6050_ReadRawData(MahonyFilter *m) {
+ 117              		.loc 1 28 43 is_stmt 1 view -0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 16
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121              		.loc 1 28 43 is_stmt 0 view .LVU13
+ 122 0000 10B5     		push	{r4, lr}
+ 123              	.LCFI3:
+ 124              		.cfi_def_cfa_offset 8
+ 125              		.cfi_offset 4, -8
+ 126              		.cfi_offset 14, -4
+ 127 0002 88B0     		sub	sp, sp, #32
+ 128              	.LCFI4:
+ 129              		.cfi_def_cfa_offset 40
+ 130 0004 0446     		mov	r4, r0
+  29:Application/MPU6050.c ****     uint8_t buf[14];
+ 131              		.loc 1 29 5 is_stmt 1 view .LVU14
+  30:Application/MPU6050.c ****     HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, ACCEL_XOUT_H, 1, buf, 14, HAL_MAX_DELAY);
+ 132              		.loc 1 30 5 view .LVU15
+ 133 0006 4FF0FF33 		mov	r3, #-1
+ 134 000a 0293     		str	r3, [sp, #8]
+ 135 000c 0E23     		movs	r3, #14
+ 136 000e 0193     		str	r3, [sp, #4]
+ 137 0010 04AB     		add	r3, sp, #16
+ 138 0012 0093     		str	r3, [sp]
+ 139 0014 0123     		movs	r3, #1
+ 140 0016 3B22     		movs	r2, #59
+ 141 0018 D021     		movs	r1, #208
+ 142 001a 3B48     		ldr	r0, .L7+8
+ 143              	.LVL4:
+ 144              		.loc 1 30 5 is_stmt 0 view .LVU16
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 4
 
 
-  30:Application/MPU6050.c ****     AccY = (int16_t)((buf[2] << 8) | buf[3])/ 16384.0f; 
- 146              		.loc 1 30 5 view .LVU21
-  31:Application/MPU6050.c ****     AccZ = (int16_t)((buf[4] << 8) | buf[5])/ 16384.0f; 
- 147              		.loc 1 31 5 view .LVU22
-  32:Application/MPU6050.c ****     GyroX = (int16_t)((buf[8] << 8) | buf[9])/ 131.0f; // 转换为°/s
- 148              		.loc 1 32 5 view .LVU23
-  33:Application/MPU6050.c ****     GyroY = (int16_t)((buf[10] << 8) | buf[11])/ 131.0f;
- 149              		.loc 1 33 5 view .LVU24
-  34:Application/MPU6050.c ****     GyroZ = (int16_t)((buf[12] << 8) | buf[13])/ 131.0f;
- 150              		.loc 1 34 5 view .LVU25
-  35:Application/MPU6050.c **** }
- 151              		.loc 1 35 1 is_stmt 0 view .LVU26
- 152 001e 09B0     		add	sp, sp, #36
- 153              	.LCFI5:
- 154              		.cfi_def_cfa_offset 4
- 155              		@ sp needed
- 156 0020 5DF804FB 		ldr	pc, [sp], #4
- 157              	.LVL9:
- 158              	.L8:
- 159              		.loc 1 35 1 view .LVU27
- 160              		.align	2
- 161              	.L7:
- 162 0024 00000000 		.word	hi2c1
- 163              		.cfi_endproc
- 164              	.LFE66:
- 166              		.global	__aeabi_fcmple
- 167              		.global	__aeabi_fmul
- 168              		.global	__aeabi_fsub
- 169              		.section	.text.invSqrt,"ax",%progbits
- 170              		.align	1
- 171              		.global	invSqrt
- 172              		.syntax unified
- 173              		.thumb
- 174              		.thumb_func
- 176              	invSqrt:
- 177              	.LVL10:
- 178              	.LFB67:
-  36:Application/MPU6050.c **** 
-  37:Application/MPU6050.c **** volatile float twoKp = twoKpDef;											// 2 * proportional gain (Kp)
-  38:Application/MPU6050.c **** volatile float twoKi = twoKiDef;											// 2 * integral gain (Ki)
+ 145 001c FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 146              	.LVL5:
+  31:Application/MPU6050.c ****     m->AccX_Raw = (int16_t)((buf[0] << 8) | buf[1])/ 16384.0f;
+ 147              		.loc 1 31 5 is_stmt 1 view .LVU17
+ 148              		.loc 1 31 33 is_stmt 0 view .LVU18
+ 149 0020 9DF81030 		ldrb	r3, [sp, #16]	@ zero_extendqisi2
+ 150              		.loc 1 31 48 view .LVU19
+ 151 0024 9DF81100 		ldrb	r0, [sp, #17]	@ zero_extendqisi2
+ 152              		.loc 1 31 19 view .LVU20
+ 153 0028 40EA0320 		orr	r0, r0, r3, lsl #8
+ 154              		.loc 1 31 52 view .LVU21
+ 155 002c 00B2     		sxth	r0, r0
+ 156 002e FFF7FEFF 		bl	__aeabi_i2f
+ 157              	.LVL6:
+ 158 0032 4FF06251 		mov	r1, #947912704
+ 159 0036 FFF7FEFF 		bl	__aeabi_fmul
+ 160              	.LVL7:
+ 161              		.loc 1 31 17 view .LVU22
+ 162 003a 2060     		str	r0, [r4]	@ float
+  32:Application/MPU6050.c ****     m->AccY_Raw = (int16_t)((buf[2] << 8) | buf[3])/ 16384.0f; 
+ 163              		.loc 1 32 5 is_stmt 1 view .LVU23
+ 164              		.loc 1 32 33 is_stmt 0 view .LVU24
+ 165 003c 9DF81230 		ldrb	r3, [sp, #18]	@ zero_extendqisi2
+ 166              		.loc 1 32 48 view .LVU25
+ 167 0040 9DF81300 		ldrb	r0, [sp, #19]	@ zero_extendqisi2
+ 168              		.loc 1 32 19 view .LVU26
+ 169 0044 40EA0320 		orr	r0, r0, r3, lsl #8
+ 170              		.loc 1 32 52 view .LVU27
+ 171 0048 00B2     		sxth	r0, r0
+ 172 004a FFF7FEFF 		bl	__aeabi_i2f
+ 173              	.LVL8:
+ 174 004e 4FF06251 		mov	r1, #947912704
+ 175 0052 FFF7FEFF 		bl	__aeabi_fmul
+ 176              	.LVL9:
+ 177              		.loc 1 32 17 view .LVU28
+ 178 0056 6060     		str	r0, [r4, #4]	@ float
+  33:Application/MPU6050.c ****     m->AccZ_Raw = (int16_t)((buf[4] << 8) | buf[5])/ 16384.0f; 
+ 179              		.loc 1 33 5 is_stmt 1 view .LVU29
+ 180              		.loc 1 33 33 is_stmt 0 view .LVU30
+ 181 0058 9DF81430 		ldrb	r3, [sp, #20]	@ zero_extendqisi2
+ 182              		.loc 1 33 48 view .LVU31
+ 183 005c 9DF81500 		ldrb	r0, [sp, #21]	@ zero_extendqisi2
+ 184              		.loc 1 33 19 view .LVU32
+ 185 0060 40EA0320 		orr	r0, r0, r3, lsl #8
+ 186              		.loc 1 33 52 view .LVU33
+ 187 0064 00B2     		sxth	r0, r0
+ 188 0066 FFF7FEFF 		bl	__aeabi_i2f
+ 189              	.LVL10:
+ 190 006a 4FF06251 		mov	r1, #947912704
+ 191 006e FFF7FEFF 		bl	__aeabi_fmul
+ 192              	.LVL11:
+ 193              		.loc 1 33 17 view .LVU34
+ 194 0072 A060     		str	r0, [r4, #8]	@ float
+  34:Application/MPU6050.c ****     m->GyroX_Raw = ((int16_t)((buf[8] << 8) | buf[9])/ 131.0f)/57.3;
+ 195              		.loc 1 34 5 is_stmt 1 view .LVU35
+ 196              		.loc 1 34 35 is_stmt 0 view .LVU36
+ 197 0074 9DF81830 		ldrb	r3, [sp, #24]	@ zero_extendqisi2
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 5
+
+
+ 198              		.loc 1 34 50 view .LVU37
+ 199 0078 9DF81900 		ldrb	r0, [sp, #25]	@ zero_extendqisi2
+ 200              		.loc 1 34 21 view .LVU38
+ 201 007c 40EA0320 		orr	r0, r0, r3, lsl #8
+ 202              		.loc 1 34 54 view .LVU39
+ 203 0080 00B2     		sxth	r0, r0
+ 204 0082 FFF7FEFF 		bl	__aeabi_i2f
+ 205              	.LVL12:
+ 206 0086 2149     		ldr	r1, .L7+12
+ 207 0088 FFF7FEFF 		bl	__aeabi_fdiv
+ 208              	.LVL13:
+ 209 008c FFF7FEFF 		bl	__aeabi_f2d
+ 210              	.LVL14:
+ 211              		.loc 1 34 63 view .LVU40
+ 212 0090 1BA3     		adr	r3, .L7
+ 213 0092 D3E90023 		ldrd	r2, [r3]
+ 214 0096 FFF7FEFF 		bl	__aeabi_ddiv
+ 215              	.LVL15:
+ 216 009a FFF7FEFF 		bl	__aeabi_d2f
+ 217              	.LVL16:
+ 218              		.loc 1 34 18 view .LVU41
+ 219 009e E060     		str	r0, [r4, #12]	@ float
+  35:Application/MPU6050.c ****     m->GyroY_Raw = ((int16_t)((buf[10] << 8) | buf[11])/ 131.0f)/57.3;
+ 220              		.loc 1 35 5 is_stmt 1 view .LVU42
+ 221              		.loc 1 35 35 is_stmt 0 view .LVU43
+ 222 00a0 9DF81A30 		ldrb	r3, [sp, #26]	@ zero_extendqisi2
+ 223              		.loc 1 35 51 view .LVU44
+ 224 00a4 9DF81B00 		ldrb	r0, [sp, #27]	@ zero_extendqisi2
+ 225              		.loc 1 35 21 view .LVU45
+ 226 00a8 40EA0320 		orr	r0, r0, r3, lsl #8
+ 227              		.loc 1 35 56 view .LVU46
+ 228 00ac 00B2     		sxth	r0, r0
+ 229 00ae FFF7FEFF 		bl	__aeabi_i2f
+ 230              	.LVL17:
+ 231 00b2 1649     		ldr	r1, .L7+12
+ 232 00b4 FFF7FEFF 		bl	__aeabi_fdiv
+ 233              	.LVL18:
+ 234 00b8 FFF7FEFF 		bl	__aeabi_f2d
+ 235              	.LVL19:
+ 236              		.loc 1 35 65 view .LVU47
+ 237 00bc 10A3     		adr	r3, .L7
+ 238 00be D3E90023 		ldrd	r2, [r3]
+ 239 00c2 FFF7FEFF 		bl	__aeabi_ddiv
+ 240              	.LVL20:
+ 241 00c6 FFF7FEFF 		bl	__aeabi_d2f
+ 242              	.LVL21:
+ 243              		.loc 1 35 18 view .LVU48
+ 244 00ca 2061     		str	r0, [r4, #16]	@ float
+  36:Application/MPU6050.c ****     m->GyroZ_Raw = ((int16_t)((buf[12] << 8) | buf[13])/ 131.0f)/57.3;
+ 245              		.loc 1 36 5 is_stmt 1 view .LVU49
+ 246              		.loc 1 36 35 is_stmt 0 view .LVU50
+ 247 00cc 9DF81C30 		ldrb	r3, [sp, #28]	@ zero_extendqisi2
+ 248              		.loc 1 36 51 view .LVU51
+ 249 00d0 9DF81D00 		ldrb	r0, [sp, #29]	@ zero_extendqisi2
+ 250              		.loc 1 36 21 view .LVU52
+ 251 00d4 40EA0320 		orr	r0, r0, r3, lsl #8
+ 252              		.loc 1 36 56 view .LVU53
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 6
+
+
+ 253 00d8 00B2     		sxth	r0, r0
+ 254 00da FFF7FEFF 		bl	__aeabi_i2f
+ 255              	.LVL22:
+ 256 00de 0B49     		ldr	r1, .L7+12
+ 257 00e0 FFF7FEFF 		bl	__aeabi_fdiv
+ 258              	.LVL23:
+ 259 00e4 FFF7FEFF 		bl	__aeabi_f2d
+ 260              	.LVL24:
+ 261              		.loc 1 36 65 view .LVU54
+ 262 00e8 05A3     		adr	r3, .L7
+ 263 00ea D3E90023 		ldrd	r2, [r3]
+ 264 00ee FFF7FEFF 		bl	__aeabi_ddiv
+ 265              	.LVL25:
+ 266 00f2 FFF7FEFF 		bl	__aeabi_d2f
+ 267              	.LVL26:
+ 268              		.loc 1 36 18 view .LVU55
+ 269 00f6 6061     		str	r0, [r4, #20]	@ float
+  37:Application/MPU6050.c **** }
+ 270              		.loc 1 37 1 view .LVU56
+ 271 00f8 08B0     		add	sp, sp, #32
+ 272              	.LCFI5:
+ 273              		.cfi_def_cfa_offset 8
+ 274              		@ sp needed
+ 275 00fa 10BD     		pop	{r4, pc}
+ 276              	.LVL27:
+ 277              	.L8:
+ 278              		.loc 1 37 1 view .LVU57
+ 279 00fc AFF30080 		.align	3
+ 280              	.L7:
+ 281 0100 66666666 		.word	1717986918
+ 282 0104 66A64C40 		.word	1078765158
+ 283 0108 00000000 		.word	hi2c1
+ 284 010c 00000343 		.word	1124270080
+ 285              		.cfi_endproc
+ 286              	.LFE66:
+ 288              		.global	__aeabi_fcmple
+ 289              		.global	__aeabi_fsub
+ 290              		.section	.text.invSqrt,"ax",%progbits
+ 291              		.align	1
+ 292              		.global	invSqrt
+ 293              		.syntax unified
+ 294              		.thumb
+ 295              		.thumb_func
+ 297              	invSqrt:
+ 298              	.LVL28:
+ 299              	.LFB67:
+  38:Application/MPU6050.c **** 
   39:Application/MPU6050.c **** //volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;					// quaternion of sensor frame rela
   40:Application/MPU6050.c **** volatile float integralFBx = 0.0f,  integralFBy = 0.0f, integralFBz = 0.0f;	// integral error terms
   41:Application/MPU6050.c **** float invSqrt(float x) {
- 179              		.loc 1 41 24 is_stmt 1 view -0
- 180              		.cfi_startproc
- 181              		@ args = 0, pretend = 0, frame = 0
- 182              		@ frame_needed = 0, uses_anonymous_args = 0
- 183              		.loc 1 41 24 is_stmt 0 view .LVU29
- 184 0000 10B5     		push	{r4, lr}
- 185              	.LCFI6:
- 186              		.cfi_def_cfa_offset 8
- 187              		.cfi_offset 4, -8
- 188              		.cfi_offset 14, -4
- 189 0002 0446     		mov	r4, r0
+ 300              		.loc 1 41 24 is_stmt 1 view -0
+ 301              		.cfi_startproc
+ 302              		@ args = 0, pretend = 0, frame = 0
+ 303              		@ frame_needed = 0, uses_anonymous_args = 0
+ 304              		.loc 1 41 24 is_stmt 0 view .LVU59
+ 305 0000 10B5     		push	{r4, lr}
+ 306              	.LCFI6:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 7
+
+
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 4, -8
+ 309              		.cfi_offset 14, -4
+ 310 0002 0446     		mov	r4, r0
   42:Application/MPU6050.c ****     if (x <= 0.0f) return 0.0f;
- 190              		.loc 1 42 5 is_stmt 1 view .LVU30
- 191              		.loc 1 42 8 is_stmt 0 view .LVU31
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 5
-
-
- 192 0004 0021     		movs	r1, #0
- 193 0006 FFF7FEFF 		bl	__aeabi_fcmple
- 194              	.LVL11:
- 195              		.loc 1 42 8 view .LVU32
- 196 000a C8B9     		cbnz	r0, .L11
+ 311              		.loc 1 42 5 is_stmt 1 view .LVU60
+ 312              		.loc 1 42 8 is_stmt 0 view .LVU61
+ 313 0004 0021     		movs	r1, #0
+ 314 0006 FFF7FEFF 		bl	__aeabi_fcmple
+ 315              	.LVL29:
+ 316              		.loc 1 42 8 view .LVU62
+ 317 000a C8B9     		cbnz	r0, .L11
   43:Application/MPU6050.c ****     float x2 = x * 0.5f;
- 197              		.loc 1 43 5 is_stmt 1 view .LVU33
- 198              		.loc 1 43 11 is_stmt 0 view .LVU34
- 199 000c 4FF07C51 		mov	r1, #1056964608
- 200 0010 2046     		mov	r0, r4
- 201 0012 FFF7FEFF 		bl	__aeabi_fmul
- 202              	.LVL12:
- 203 0016 0146     		mov	r1, r0
- 204              	.LVL13:
+ 318              		.loc 1 43 5 is_stmt 1 view .LVU63
+ 319              		.loc 1 43 11 is_stmt 0 view .LVU64
+ 320 000c 4FF07C51 		mov	r1, #1056964608
+ 321 0010 2046     		mov	r0, r4
+ 322 0012 FFF7FEFF 		bl	__aeabi_fmul
+ 323              	.LVL30:
+ 324 0016 0146     		mov	r1, r0
+ 325              	.LVL31:
   44:Application/MPU6050.c ****     float y = x;
- 205              		.loc 1 44 5 is_stmt 1 view .LVU35
+ 326              		.loc 1 44 5 is_stmt 1 view .LVU65
   45:Application/MPU6050.c ****     int i = *(int*)&y;
- 206              		.loc 1 45 5 view .LVU36
+ 327              		.loc 1 45 5 view .LVU66
   46:Application/MPU6050.c ****     i = 0x5f3759df - (i >> 1);
- 207              		.loc 1 46 5 view .LVU37
+ 328              		.loc 1 46 5 view .LVU67
   47:Application/MPU6050.c ****     y = *(float*)&i;
- 208              		.loc 1 47 5 view .LVU38
- 209              		.loc 1 47 9 is_stmt 0 view .LVU39
- 210 0018 0A4B     		ldr	r3, .L13
- 211 001a A3EB6404 		sub	r4, r3, r4, asr #1
- 212              	.LVL14:
+ 329              		.loc 1 47 5 view .LVU68
+ 330              		.loc 1 47 9 is_stmt 0 view .LVU69
+ 331 0018 0A4B     		ldr	r3, .L13
+ 332 001a A3EB6404 		sub	r4, r3, r4, asr #1
+ 333              	.LVL32:
   48:Application/MPU6050.c ****     y = y * (1.5f - x2 * y * y);
- 213              		.loc 1 48 5 is_stmt 1 view .LVU40
- 214              		.loc 1 48 24 is_stmt 0 view .LVU41
- 215 001e 2046     		mov	r0, r4
- 216              	.LVL15:
- 217              		.loc 1 48 24 view .LVU42
- 218 0020 FFF7FEFF 		bl	__aeabi_fmul
- 219              	.LVL16:
- 220              		.loc 1 48 24 view .LVU43
- 221 0024 0146     		mov	r1, r0
- 222              		.loc 1 48 28 view .LVU44
- 223 0026 2046     		mov	r0, r4
- 224 0028 FFF7FEFF 		bl	__aeabi_fmul
- 225              	.LVL17:
- 226 002c 0146     		mov	r1, r0
- 227              		.loc 1 48 19 view .LVU45
- 228 002e 4FF07F50 		mov	r0, #1069547520
- 229 0032 FFF7FEFF 		bl	__aeabi_fsub
- 230              	.LVL18:
- 231 0036 0146     		mov	r1, r0
- 232              		.loc 1 48 11 view .LVU46
- 233 0038 2046     		mov	r0, r4
- 234 003a FFF7FEFF 		bl	__aeabi_fmul
- 235              	.LVL19:
+ 334              		.loc 1 48 5 is_stmt 1 view .LVU70
+ 335              		.loc 1 48 24 is_stmt 0 view .LVU71
+ 336 001e 2046     		mov	r0, r4
+ 337              	.LVL33:
+ 338              		.loc 1 48 24 view .LVU72
+ 339 0020 FFF7FEFF 		bl	__aeabi_fmul
+ 340              	.LVL34:
+ 341              		.loc 1 48 24 view .LVU73
+ 342 0024 0146     		mov	r1, r0
+ 343              		.loc 1 48 28 view .LVU74
+ 344 0026 2046     		mov	r0, r4
+ 345 0028 FFF7FEFF 		bl	__aeabi_fmul
+ 346              	.LVL35:
+ 347 002c 0146     		mov	r1, r0
+ 348              		.loc 1 48 19 view .LVU75
+ 349 002e 4FF07F50 		mov	r0, #1069547520
+ 350 0032 FFF7FEFF 		bl	__aeabi_fsub
+ 351              	.LVL36:
+ 352 0036 0146     		mov	r1, r0
+ 353              		.loc 1 48 11 view .LVU76
+ 354 0038 2046     		mov	r0, r4
+ 355 003a FFF7FEFF 		bl	__aeabi_fmul
+ 356              	.LVL37:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 8
+
+
   49:Application/MPU6050.c ****     return y;
- 236              		.loc 1 49 5 is_stmt 1 view .LVU47
- 237              	.L9:
+ 357              		.loc 1 49 5 is_stmt 1 view .LVU77
+ 358              	.L9:
   50:Application/MPU6050.c **** }
- 238              		.loc 1 50 1 is_stmt 0 view .LVU48
- 239 003e 10BD     		pop	{r4, pc}
- 240              	.LVL20:
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 6
-
-
- 241              	.L11:
+ 359              		.loc 1 50 1 is_stmt 0 view .LVU78
+ 360 003e 10BD     		pop	{r4, pc}
+ 361              	.LVL38:
+ 362              	.L11:
   42:Application/MPU6050.c ****     float x2 = x * 0.5f;
- 242              		.loc 1 42 27 view .LVU49
- 243 0040 0020     		movs	r0, #0
- 244 0042 FCE7     		b	.L9
- 245              	.L14:
- 246              		.align	2
- 247              	.L13:
- 248 0044 DF59375F 		.word	1597463007
- 249              		.cfi_endproc
- 250              	.LFE67:
- 252              		.global	__aeabi_fcmpeq
- 253              		.global	__aeabi_fadd
- 254              		.global	__aeabi_fcmpgt
- 255              		.global	__aeabi_f2d
- 256              		.global	__aeabi_ddiv
- 257              		.global	__aeabi_d2f
- 258              		.section	.text.MahonyAHRSupdateIMU,"ax",%progbits
- 259              		.align	1
- 260              		.global	MahonyAHRSupdateIMU
- 261              		.syntax unified
- 262              		.thumb
- 263              		.thumb_func
- 265              	MahonyAHRSupdateIMU:
- 266              	.LVL21:
- 267              	.LFB68:
-  51:Application/MPU6050.c **** void MahonyAHRSupdateIMU(MahonyFilter *mf, float q[4], float gx, float gy, float gz, float ax, floa
- 268              		.loc 1 51 116 is_stmt 1 view -0
- 269              		.cfi_startproc
- 270              		@ args = 16, pretend = 0, frame = 16
- 271              		@ frame_needed = 0, uses_anonymous_args = 0
- 272              		.loc 1 51 116 is_stmt 0 view .LVU51
- 273 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
- 274              	.LCFI7:
- 275              		.cfi_def_cfa_offset 36
- 276              		.cfi_offset 4, -36
- 277              		.cfi_offset 5, -32
- 278              		.cfi_offset 6, -28
- 279              		.cfi_offset 7, -24
- 280              		.cfi_offset 8, -20
- 281              		.cfi_offset 9, -16
- 282              		.cfi_offset 10, -12
- 283              		.cfi_offset 11, -8
- 284              		.cfi_offset 14, -4
- 285 0004 85B0     		sub	sp, sp, #20
- 286              	.LCFI8:
- 287              		.cfi_def_cfa_offset 56
- 288 0006 0290     		str	r0, [sp, #8]
- 289 0008 0C46     		mov	r4, r1
- 290 000a 1546     		mov	r5, r2
- 291 000c 0093     		str	r3, [sp]	@ float
- 292 000e DDF83C90 		ldr	r9, [sp, #60]	@ float
- 293 0012 DDF84080 		ldr	r8, [sp, #64]	@ float
- 294 0016 119F     		ldr	r7, [sp, #68]	@ float
-  52:Application/MPU6050.c **** 	float recipNorm;
- 295              		.loc 1 52 2 is_stmt 1 view .LVU52
-  53:Application/MPU6050.c **** 	float halfvx, halfvy, halfvz;
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 7
+ 363              		.loc 1 42 27 view .LVU79
+ 364 0040 0020     		movs	r0, #0
+ 365 0042 FCE7     		b	.L9
+ 366              	.L14:
+ 367              		.align	2
+ 368              	.L13:
+ 369 0044 DF59375F 		.word	1597463007
+ 370              		.cfi_endproc
+ 371              	.LFE67:
+ 373              		.global	__aeabi_fcmpeq
+ 374              		.global	__aeabi_fadd
+ 375              		.section	.text.MahonyAHRSupdateIMU,"ax",%progbits
+ 376              		.align	1
+ 377              		.global	MahonyAHRSupdateIMU
+ 378              		.syntax unified
+ 379              		.thumb
+ 380              		.thumb_func
+ 382              	MahonyAHRSupdateIMU:
+ 383              	.LVL39:
+ 384              	.LFB68:
+  51:Application/MPU6050.c **** 
+  52:Application/MPU6050.c **** float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
+  53:Application/MPU6050.c **** void MahonyAHRSupdateIMU(MahonyFilter *m,float *q) {
+ 385              		.loc 1 53 52 is_stmt 1 view -0
+ 386              		.cfi_startproc
+ 387              		@ args = 0, pretend = 0, frame = 16
+ 388              		@ frame_needed = 0, uses_anonymous_args = 0
+ 389              		.loc 1 53 52 is_stmt 0 view .LVU81
+ 390 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 391              	.LCFI7:
+ 392              		.cfi_def_cfa_offset 36
+ 393              		.cfi_offset 4, -36
+ 394              		.cfi_offset 5, -32
+ 395              		.cfi_offset 6, -28
+ 396              		.cfi_offset 7, -24
+ 397              		.cfi_offset 8, -20
+ 398              		.cfi_offset 9, -16
+ 399              		.cfi_offset 10, -12
+ 400              		.cfi_offset 11, -8
+ 401              		.cfi_offset 14, -4
+ 402 0004 85B0     		sub	sp, sp, #20
+ 403              	.LCFI8:
+ 404              		.cfi_def_cfa_offset 56
+ 405 0006 0C46     		mov	r4, r1
+  54:Application/MPU6050.c **** 	float recipNorm;
+ 406              		.loc 1 54 2 is_stmt 1 view .LVU82
+  55:Application/MPU6050.c **** 	float halfvx, halfvy, halfvz;
+ 407              		.loc 1 55 2 view .LVU83
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 9
 
 
- 296              		.loc 1 53 2 view .LVU53
-  54:Application/MPU6050.c **** 	float halfex, halfey, halfez;
- 297              		.loc 1 54 2 view .LVU54
-  55:Application/MPU6050.c **** 	float qa, qb, qc;
- 298              		.loc 1 55 2 view .LVU55
-  56:Application/MPU6050.c **** 
-  57:Application/MPU6050.c **** 	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisa
-  58:Application/MPU6050.c ****     // 只在加速度计数据有效时才进行运算
-  59:Application/MPU6050.c **** 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
- 299              		.loc 1 59 2 view .LVU56
- 300              		.loc 1 59 4 is_stmt 0 view .LVU57
- 301 0018 0021     		movs	r1, #0
- 302              	.LVL22:
- 303              		.loc 1 59 4 view .LVU58
- 304 001a 4846     		mov	r0, r9
- 305              	.LVL23:
- 306              		.loc 1 59 4 view .LVU59
- 307 001c FFF7FEFF 		bl	__aeabi_fcmpeq
- 308              	.LVL24:
- 309              		.loc 1 59 4 view .LVU60
- 310 0020 58B1     		cbz	r0, .L16
- 311              		.loc 1 59 20 discriminator 1 view .LVU61
- 312 0022 0021     		movs	r1, #0
- 313 0024 4046     		mov	r0, r8
- 314 0026 FFF7FEFF 		bl	__aeabi_fcmpeq
- 315              	.LVL25:
- 316 002a 30B1     		cbz	r0, .L16
- 317              		.loc 1 59 5 discriminator 2 view .LVU62
- 318 002c 0021     		movs	r1, #0
- 319 002e 3846     		mov	r0, r7
- 320 0030 FFF7FEFF 		bl	__aeabi_fcmpeq
- 321              	.LVL26:
- 322 0034 0028     		cmp	r0, #0
- 323 0036 40F0F880 		bne	.L17
- 324              	.L16:
-  60:Application/MPU6050.c **** 
-  61:Application/MPU6050.c **** 		// Normalise accelerometer measurement
-  62:Application/MPU6050.c ****         // 将加速度计得到的实际重力加速度向量v单位化
-  63:Application/MPU6050.c **** 		recipNorm = invSqrt(ax * ax + ay * ay + az * az); //该函数返回平方根的倒数
- 325              		.loc 1 63 3 is_stmt 1 view .LVU63
- 326              		.loc 1 63 26 is_stmt 0 view .LVU64
- 327 003a 4946     		mov	r1, r9
- 328 003c 4846     		mov	r0, r9
- 329 003e FFF7FEFF 		bl	__aeabi_fmul
- 330              	.LVL27:
- 331 0042 0646     		mov	r6, r0
- 332              		.loc 1 63 36 view .LVU65
- 333 0044 4146     		mov	r1, r8
- 334 0046 4046     		mov	r0, r8
- 335 0048 FFF7FEFF 		bl	__aeabi_fmul
- 336              	.LVL28:
- 337 004c 0146     		mov	r1, r0
- 338              		.loc 1 63 31 view .LVU66
- 339 004e 3046     		mov	r0, r6
- 340 0050 FFF7FEFF 		bl	__aeabi_fadd
- 341              	.LVL29:
- 342 0054 0646     		mov	r6, r0
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 8
+  56:Application/MPU6050.c **** 	float halfex, halfey, halfez;
+ 408              		.loc 1 56 2 view .LVU84
+  57:Application/MPU6050.c **** 	float qa, qb, qc;
+ 409              		.loc 1 57 2 view .LVU85
+  58:Application/MPU6050.c ****   float  gx,  gy,  gz,  ax,  ay,  az;
+ 410              		.loc 1 58 3 view .LVU86
+  59:Application/MPU6050.c **** 	  ax = m->AccX_Raw;
+ 411              		.loc 1 59 4 view .LVU87
+ 412              		.loc 1 59 7 is_stmt 0 view .LVU88
+ 413 0008 D0F80090 		ldr	r9, [r0]	@ float
+ 414              	.LVL40:
+  60:Application/MPU6050.c ****     ay = m->AccY_Raw;
+ 415              		.loc 1 60 5 is_stmt 1 view .LVU89
+ 416              		.loc 1 60 8 is_stmt 0 view .LVU90
+ 417 000c D0F80480 		ldr	r8, [r0, #4]	@ float
+ 418              	.LVL41:
+  61:Application/MPU6050.c ****     az = m->AccZ_Raw;
+ 419              		.loc 1 61 5 is_stmt 1 view .LVU91
+ 420              		.loc 1 61 8 is_stmt 0 view .LVU92
+ 421 0010 8768     		ldr	r7, [r0, #8]	@ float
+ 422              	.LVL42:
+  62:Application/MPU6050.c ****     gx = m->GyroX_Raw;
+ 423              		.loc 1 62 5 is_stmt 1 view .LVU93
+ 424              		.loc 1 62 8 is_stmt 0 view .LVU94
+ 425 0012 C568     		ldr	r5, [r0, #12]	@ float
+ 426              	.LVL43:
+  63:Application/MPU6050.c ****     gy = m->GyroY_Raw;
+ 427              		.loc 1 63 5 is_stmt 1 view .LVU95
+ 428              		.loc 1 63 8 is_stmt 0 view .LVU96
+ 429 0014 0369     		ldr	r3, [r0, #16]	@ float
+ 430 0016 0093     		str	r3, [sp]	@ float
+ 431              	.LVL44:
+  64:Application/MPU6050.c ****     gz = m->GyroZ_Raw;
+ 432              		.loc 1 64 5 is_stmt 1 view .LVU97
+ 433              		.loc 1 64 8 is_stmt 0 view .LVU98
+ 434 0018 4369     		ldr	r3, [r0, #20]	@ float
+ 435              	.LVL45:
+ 436              		.loc 1 64 8 view .LVU99
+ 437 001a 0193     		str	r3, [sp, #4]	@ float
+ 438              	.LVL46:
+  65:Application/MPU6050.c **** 	// Compute feedback only if accelerometer measurement valid (avoids NaN in accelerometer normalisa
+  66:Application/MPU6050.c ****     // 只在加速度计数据有效时才进行运算
+  67:Application/MPU6050.c **** 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
+ 439              		.loc 1 67 2 is_stmt 1 view .LVU100
+ 440              		.loc 1 67 4 is_stmt 0 view .LVU101
+ 441 001c 0021     		movs	r1, #0
+ 442              	.LVL47:
+ 443              		.loc 1 67 4 view .LVU102
+ 444 001e 4846     		mov	r0, r9
+ 445              	.LVL48:
+ 446              		.loc 1 67 4 view .LVU103
+ 447 0020 FFF7FEFF 		bl	__aeabi_fcmpeq
+ 448              	.LVL49:
+ 449              		.loc 1 67 4 view .LVU104
+ 450 0024 58B1     		cbz	r0, .L16
+ 451              		.loc 1 67 20 discriminator 1 view .LVU105
+ 452 0026 0021     		movs	r1, #0
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 10
 
 
- 343              		.loc 1 63 46 view .LVU67
- 344 0056 3946     		mov	r1, r7
- 345 0058 3846     		mov	r0, r7
- 346 005a FFF7FEFF 		bl	__aeabi_fmul
- 347              	.LVL30:
- 348 005e 0146     		mov	r1, r0
- 349              		.loc 1 63 15 view .LVU68
- 350 0060 3046     		mov	r0, r6
- 351 0062 FFF7FEFF 		bl	__aeabi_fadd
- 352              	.LVL31:
- 353 0066 FFF7FEFF 		bl	invSqrt
- 354              	.LVL32:
- 355 006a 0646     		mov	r6, r0
- 356              	.LVL33:
-  64:Application/MPU6050.c **** 		ax *= recipNorm;
- 357              		.loc 1 64 3 is_stmt 1 view .LVU69
- 358              		.loc 1 64 6 is_stmt 0 view .LVU70
- 359 006c 0146     		mov	r1, r0
- 360 006e 4846     		mov	r0, r9
- 361              	.LVL34:
- 362              		.loc 1 64 6 view .LVU71
- 363 0070 FFF7FEFF 		bl	__aeabi_fmul
- 364              	.LVL35:
- 365              		.loc 1 64 6 view .LVU72
- 366 0074 0390     		str	r0, [sp, #12]	@ float
- 367              	.LVL36:
-  65:Application/MPU6050.c **** 		ay *= recipNorm;
- 368              		.loc 1 65 3 is_stmt 1 view .LVU73
- 369              		.loc 1 65 6 is_stmt 0 view .LVU74
- 370 0076 3146     		mov	r1, r6
- 371 0078 4046     		mov	r0, r8
- 372              	.LVL37:
- 373              		.loc 1 65 6 view .LVU75
- 374 007a FFF7FEFF 		bl	__aeabi_fmul
- 375              	.LVL38:
- 376 007e 0190     		str	r0, [sp, #4]	@ float
- 377              	.LVL39:
-  66:Application/MPU6050.c **** 		az *= recipNorm;        
- 378              		.loc 1 66 3 is_stmt 1 view .LVU76
- 379              		.loc 1 66 6 is_stmt 0 view .LVU77
- 380 0080 3146     		mov	r1, r6
- 381 0082 3846     		mov	r0, r7
- 382              	.LVL40:
- 383              		.loc 1 66 6 view .LVU78
- 384 0084 FFF7FEFF 		bl	__aeabi_fmul
- 385              	.LVL41:
- 386 0088 8346     		mov	fp, r0
- 387              	.LVL42:
-  67:Application/MPU6050.c **** 
-  68:Application/MPU6050.c **** 		// Estimated direction of gravity
-  69:Application/MPU6050.c ****         // 通过四元数得到理论重力加速度向量g 
-  70:Application/MPU6050.c ****         // 注意，这里实际上是矩阵第三列*1/2，在开头对Kp Ki的宏定义均为2*�
-  71:Application/MPU6050.c ****         // 这样处理目的是减少乘法运算量
-  72:Application/MPU6050.c **** 		halfvx = q[1] * q[3] - q[0] * q[2];
- 388              		.loc 1 72 3 is_stmt 1 view .LVU79
- 389              		.loc 1 72 13 is_stmt 0 view .LVU80
- 390 008a D4F80490 		ldr	r9, [r4, #4]	@ float
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 9
+ 453 0028 4046     		mov	r0, r8
+ 454 002a FFF7FEFF 		bl	__aeabi_fcmpeq
+ 455              	.LVL50:
+ 456 002e 30B1     		cbz	r0, .L16
+ 457              		.loc 1 67 5 discriminator 2 view .LVU106
+ 458 0030 0021     		movs	r1, #0
+ 459 0032 3846     		mov	r0, r7
+ 460 0034 FFF7FEFF 		bl	__aeabi_fcmpeq
+ 461              	.LVL51:
+ 462 0038 0028     		cmp	r0, #0
+ 463 003a 40F0E080 		bne	.L17
+ 464              	.L16:
+  68:Application/MPU6050.c **** 
+  69:Application/MPU6050.c **** 		// Normalise accelerometer measurement
+  70:Application/MPU6050.c ****         // 将加速度计得到的实际重力加速度向量v单位化
+  71:Application/MPU6050.c **** 		recipNorm = invSqrt(ax * ax + ay * ay + az * az); //该函数返回平方根的倒数
+ 465              		.loc 1 71 3 is_stmt 1 view .LVU107
+ 466              		.loc 1 71 26 is_stmt 0 view .LVU108
+ 467 003e 4946     		mov	r1, r9
+ 468 0040 4846     		mov	r0, r9
+ 469 0042 FFF7FEFF 		bl	__aeabi_fmul
+ 470              	.LVL52:
+ 471 0046 0646     		mov	r6, r0
+ 472              		.loc 1 71 36 view .LVU109
+ 473 0048 4146     		mov	r1, r8
+ 474 004a 4046     		mov	r0, r8
+ 475 004c FFF7FEFF 		bl	__aeabi_fmul
+ 476              	.LVL53:
+ 477 0050 0146     		mov	r1, r0
+ 478              		.loc 1 71 31 view .LVU110
+ 479 0052 3046     		mov	r0, r6
+ 480 0054 FFF7FEFF 		bl	__aeabi_fadd
+ 481              	.LVL54:
+ 482 0058 0646     		mov	r6, r0
+ 483              		.loc 1 71 46 view .LVU111
+ 484 005a 3946     		mov	r1, r7
+ 485 005c 3846     		mov	r0, r7
+ 486 005e FFF7FEFF 		bl	__aeabi_fmul
+ 487              	.LVL55:
+ 488 0062 0146     		mov	r1, r0
+ 489              		.loc 1 71 15 view .LVU112
+ 490 0064 3046     		mov	r0, r6
+ 491 0066 FFF7FEFF 		bl	__aeabi_fadd
+ 492              	.LVL56:
+ 493 006a FFF7FEFF 		bl	invSqrt
+ 494              	.LVL57:
+ 495 006e 0646     		mov	r6, r0
+ 496              	.LVL58:
+  72:Application/MPU6050.c **** 		ax *= recipNorm;
+ 497              		.loc 1 72 3 is_stmt 1 view .LVU113
+ 498              		.loc 1 72 6 is_stmt 0 view .LVU114
+ 499 0070 0146     		mov	r1, r0
+ 500 0072 4846     		mov	r0, r9
+ 501              	.LVL59:
+ 502              		.loc 1 72 6 view .LVU115
+ 503 0074 FFF7FEFF 		bl	__aeabi_fmul
+ 504              	.LVL60:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 11
 
 
- 391              		.loc 1 72 20 view .LVU81
- 392 008e E768     		ldr	r7, [r4, #12]	@ float
- 393              		.loc 1 72 17 view .LVU82
- 394 0090 3946     		mov	r1, r7
- 395 0092 4846     		mov	r0, r9
- 396              	.LVL43:
- 397              		.loc 1 72 17 view .LVU83
- 398 0094 FFF7FEFF 		bl	__aeabi_fmul
- 399              	.LVL44:
- 400 0098 0646     		mov	r6, r0
- 401              	.LVL45:
- 402              		.loc 1 72 27 view .LVU84
- 403 009a D4F80080 		ldr	r8, [r4]	@ float
- 404              		.loc 1 72 34 view .LVU85
- 405 009e D4F808A0 		ldr	r10, [r4, #8]	@ float
- 406              		.loc 1 72 31 view .LVU86
- 407 00a2 5146     		mov	r1, r10
- 408 00a4 4046     		mov	r0, r8
- 409 00a6 FFF7FEFF 		bl	__aeabi_fmul
- 410              	.LVL46:
- 411 00aa 0146     		mov	r1, r0
- 412              		.loc 1 72 10 view .LVU87
- 413 00ac 3046     		mov	r0, r6
- 414 00ae FFF7FEFF 		bl	__aeabi_fsub
- 415              	.LVL47:
- 416 00b2 0646     		mov	r6, r0
- 417              	.LVL48:
-  73:Application/MPU6050.c **** 		halfvy = q[0] * q[1] + q[2] * q[3];
- 418              		.loc 1 73 3 is_stmt 1 view .LVU88
- 419              		.loc 1 73 17 is_stmt 0 view .LVU89
- 420 00b4 4146     		mov	r1, r8
- 421 00b6 4846     		mov	r0, r9
- 422              	.LVL49:
- 423              		.loc 1 73 17 view .LVU90
- 424 00b8 FFF7FEFF 		bl	__aeabi_fmul
- 425              	.LVL50:
- 426 00bc 8146     		mov	r9, r0
- 427              		.loc 1 73 31 view .LVU91
- 428 00be 5146     		mov	r1, r10
- 429 00c0 3846     		mov	r0, r7
- 430 00c2 FFF7FEFF 		bl	__aeabi_fmul
- 431              	.LVL51:
- 432 00c6 0146     		mov	r1, r0
- 433              		.loc 1 73 10 view .LVU92
- 434 00c8 4846     		mov	r0, r9
- 435 00ca FFF7FEFF 		bl	__aeabi_fadd
- 436              	.LVL52:
- 437 00ce 8146     		mov	r9, r0
- 438              	.LVL53:
-  74:Application/MPU6050.c **** 		halfvz = q[0] * q[0] - 0.5f + q[3] * q[3];
- 439              		.loc 1 74 3 is_stmt 1 view .LVU93
- 440              		.loc 1 74 17 is_stmt 0 view .LVU94
- 441 00d0 4146     		mov	r1, r8
- 442 00d2 4046     		mov	r0, r8
- 443              	.LVL54:
- 444              		.loc 1 74 17 view .LVU95
- 445 00d4 FFF7FEFF 		bl	__aeabi_fmul
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 10
+ 505              		.loc 1 72 6 view .LVU116
+ 506 0078 0390     		str	r0, [sp, #12]	@ float
+ 507              	.LVL61:
+  73:Application/MPU6050.c **** 		ay *= recipNorm;
+ 508              		.loc 1 73 3 is_stmt 1 view .LVU117
+ 509              		.loc 1 73 6 is_stmt 0 view .LVU118
+ 510 007a 3146     		mov	r1, r6
+ 511 007c 4046     		mov	r0, r8
+ 512              	.LVL62:
+ 513              		.loc 1 73 6 view .LVU119
+ 514 007e FFF7FEFF 		bl	__aeabi_fmul
+ 515              	.LVL63:
+ 516 0082 0290     		str	r0, [sp, #8]	@ float
+ 517              	.LVL64:
+  74:Application/MPU6050.c **** 		az *= recipNorm;        
+ 518              		.loc 1 74 3 is_stmt 1 view .LVU120
+ 519              		.loc 1 74 6 is_stmt 0 view .LVU121
+ 520 0084 3146     		mov	r1, r6
+ 521 0086 3846     		mov	r0, r7
+ 522              	.LVL65:
+ 523              		.loc 1 74 6 view .LVU122
+ 524 0088 FFF7FEFF 		bl	__aeabi_fmul
+ 525              	.LVL66:
+ 526 008c 8346     		mov	fp, r0
+ 527              	.LVL67:
+  75:Application/MPU6050.c **** 
+  76:Application/MPU6050.c **** 		// Estimated direction of gravity
+  77:Application/MPU6050.c ****         // 通过四元数得到理论重力加速度向量g 
+  78:Application/MPU6050.c ****         // 注意，这里实际上是矩阵第三列*1/2，在开头对Kp Ki的宏定义均为2*�
+  79:Application/MPU6050.c ****         // 这样处理目的是减少乘法运算量
+  80:Application/MPU6050.c **** 		halfvx = q[1] * q[3] - q[0] * q[2];
+ 528              		.loc 1 80 3 is_stmt 1 view .LVU123
+ 529              		.loc 1 80 13 is_stmt 0 view .LVU124
+ 530 008e D4F80490 		ldr	r9, [r4, #4]	@ float
+ 531              		.loc 1 80 20 view .LVU125
+ 532 0092 E768     		ldr	r7, [r4, #12]	@ float
+ 533              		.loc 1 80 17 view .LVU126
+ 534 0094 3946     		mov	r1, r7
+ 535 0096 4846     		mov	r0, r9
+ 536              	.LVL68:
+ 537              		.loc 1 80 17 view .LVU127
+ 538 0098 FFF7FEFF 		bl	__aeabi_fmul
+ 539              	.LVL69:
+ 540 009c 0646     		mov	r6, r0
+ 541              	.LVL70:
+ 542              		.loc 1 80 27 view .LVU128
+ 543 009e D4F80080 		ldr	r8, [r4]	@ float
+ 544              		.loc 1 80 34 view .LVU129
+ 545 00a2 D4F808A0 		ldr	r10, [r4, #8]	@ float
+ 546              		.loc 1 80 31 view .LVU130
+ 547 00a6 5146     		mov	r1, r10
+ 548 00a8 4046     		mov	r0, r8
+ 549 00aa FFF7FEFF 		bl	__aeabi_fmul
+ 550              	.LVL71:
+ 551 00ae 0146     		mov	r1, r0
+ 552              		.loc 1 80 10 view .LVU131
+ 553 00b0 3046     		mov	r0, r6
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 12
 
 
- 446              	.LVL55:
- 447              		.loc 1 74 24 view .LVU96
- 448 00d8 4FF07C51 		mov	r1, #1056964608
- 449 00dc FFF7FEFF 		bl	__aeabi_fsub
- 450              	.LVL56:
- 451 00e0 8046     		mov	r8, r0
- 452              		.loc 1 74 38 view .LVU97
- 453 00e2 3946     		mov	r1, r7
- 454 00e4 3846     		mov	r0, r7
- 455 00e6 FFF7FEFF 		bl	__aeabi_fmul
- 456              	.LVL57:
- 457 00ea 0146     		mov	r1, r0
- 458              		.loc 1 74 10 view .LVU98
- 459 00ec 4046     		mov	r0, r8
- 460 00ee FFF7FEFF 		bl	__aeabi_fadd
- 461              	.LVL58:
- 462 00f2 0746     		mov	r7, r0
- 463              	.LVL59:
-  75:Application/MPU6050.c **** 	
-  76:Application/MPU6050.c **** 		// Error is sum of cross product between estimated and measured direction of gravity
-  77:Application/MPU6050.c ****         // 对实际重力加速度向量v与理论重力加速度向量g做外积
-  78:Application/MPU6050.c **** 		halfex = (ay * halfvz - az * halfvy);
- 464              		.loc 1 78 3 is_stmt 1 view .LVU99
- 465              		.loc 1 78 16 is_stmt 0 view .LVU100
- 466 00f4 0146     		mov	r1, r0
- 467 00f6 0198     		ldr	r0, [sp, #4]	@ float
- 468              	.LVL60:
- 469              		.loc 1 78 16 view .LVU101
- 470 00f8 FFF7FEFF 		bl	__aeabi_fmul
- 471              	.LVL61:
- 472              		.loc 1 78 16 view .LVU102
- 473 00fc 8046     		mov	r8, r0
- 474              		.loc 1 78 30 view .LVU103
- 475 00fe 4946     		mov	r1, r9
- 476 0100 5846     		mov	r0, fp
- 477 0102 FFF7FEFF 		bl	__aeabi_fmul
- 478              	.LVL62:
- 479 0106 0146     		mov	r1, r0
- 480              		.loc 1 78 10 view .LVU104
- 481 0108 4046     		mov	r0, r8
- 482 010a FFF7FEFF 		bl	__aeabi_fsub
- 483              	.LVL63:
- 484 010e 8046     		mov	r8, r0
- 485              	.LVL64:
-  79:Application/MPU6050.c **** 		halfey = (az * halfvx - ax * halfvz);
- 486              		.loc 1 79 3 is_stmt 1 view .LVU105
- 487              		.loc 1 79 16 is_stmt 0 view .LVU106
- 488 0110 3146     		mov	r1, r6
- 489 0112 5846     		mov	r0, fp
- 490              	.LVL65:
- 491              		.loc 1 79 16 view .LVU107
- 492 0114 FFF7FEFF 		bl	__aeabi_fmul
- 493              	.LVL66:
- 494 0118 8246     		mov	r10, r0
- 495              		.loc 1 79 30 view .LVU108
- 496 011a 3946     		mov	r1, r7
- 497 011c DDF80CB0 		ldr	fp, [sp, #12]	@ float
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 11
+ 554 00b2 FFF7FEFF 		bl	__aeabi_fsub
+ 555              	.LVL72:
+ 556 00b6 0646     		mov	r6, r0
+ 557              	.LVL73:
+  81:Application/MPU6050.c **** 		halfvy = q[0] * q[1] + q[2] * q[3];
+ 558              		.loc 1 81 3 is_stmt 1 view .LVU132
+ 559              		.loc 1 81 17 is_stmt 0 view .LVU133
+ 560 00b8 4146     		mov	r1, r8
+ 561 00ba 4846     		mov	r0, r9
+ 562              	.LVL74:
+ 563              		.loc 1 81 17 view .LVU134
+ 564 00bc FFF7FEFF 		bl	__aeabi_fmul
+ 565              	.LVL75:
+ 566 00c0 8146     		mov	r9, r0
+ 567              		.loc 1 81 31 view .LVU135
+ 568 00c2 5146     		mov	r1, r10
+ 569 00c4 3846     		mov	r0, r7
+ 570 00c6 FFF7FEFF 		bl	__aeabi_fmul
+ 571              	.LVL76:
+ 572 00ca 0146     		mov	r1, r0
+ 573              		.loc 1 81 10 view .LVU136
+ 574 00cc 4846     		mov	r0, r9
+ 575 00ce FFF7FEFF 		bl	__aeabi_fadd
+ 576              	.LVL77:
+ 577 00d2 8146     		mov	r9, r0
+ 578              	.LVL78:
+  82:Application/MPU6050.c **** 		halfvz = q[0] * q[0] - 0.5f + q[3] * q[3];
+ 579              		.loc 1 82 3 is_stmt 1 view .LVU137
+ 580              		.loc 1 82 17 is_stmt 0 view .LVU138
+ 581 00d4 4146     		mov	r1, r8
+ 582 00d6 4046     		mov	r0, r8
+ 583              	.LVL79:
+ 584              		.loc 1 82 17 view .LVU139
+ 585 00d8 FFF7FEFF 		bl	__aeabi_fmul
+ 586              	.LVL80:
+ 587              		.loc 1 82 24 view .LVU140
+ 588 00dc 4FF07C51 		mov	r1, #1056964608
+ 589 00e0 FFF7FEFF 		bl	__aeabi_fsub
+ 590              	.LVL81:
+ 591 00e4 8046     		mov	r8, r0
+ 592              		.loc 1 82 38 view .LVU141
+ 593 00e6 3946     		mov	r1, r7
+ 594 00e8 3846     		mov	r0, r7
+ 595 00ea FFF7FEFF 		bl	__aeabi_fmul
+ 596              	.LVL82:
+ 597 00ee 0146     		mov	r1, r0
+ 598              		.loc 1 82 10 view .LVU142
+ 599 00f0 4046     		mov	r0, r8
+ 600 00f2 FFF7FEFF 		bl	__aeabi_fadd
+ 601              	.LVL83:
+ 602 00f6 0746     		mov	r7, r0
+ 603              	.LVL84:
+  83:Application/MPU6050.c **** 	
+  84:Application/MPU6050.c **** 		// Error is sum of cross product between estimated and measured direction of gravity
+  85:Application/MPU6050.c ****         // 对实际重力加速度向量v与理论重力加速度向量g做外积
+  86:Application/MPU6050.c **** 		halfex = (ay * halfvz - az * halfvy);
+ 604              		.loc 1 86 3 is_stmt 1 view .LVU143
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 13
 
 
- 498              	.LVL67:
- 499              		.loc 1 79 30 view .LVU109
- 500 0120 5846     		mov	r0, fp
- 501 0122 FFF7FEFF 		bl	__aeabi_fmul
- 502              	.LVL68:
- 503 0126 0146     		mov	r1, r0
- 504              		.loc 1 79 10 view .LVU110
- 505 0128 5046     		mov	r0, r10
- 506 012a FFF7FEFF 		bl	__aeabi_fsub
- 507              	.LVL69:
- 508 012e 0746     		mov	r7, r0
- 509              	.LVL70:
-  80:Application/MPU6050.c **** 		halfez = (ax * halfvy - ay * halfvx);
- 510              		.loc 1 80 3 is_stmt 1 view .LVU111
- 511              		.loc 1 80 16 is_stmt 0 view .LVU112
- 512 0130 4946     		mov	r1, r9
- 513 0132 5846     		mov	r0, fp
- 514              	.LVL71:
- 515              		.loc 1 80 16 view .LVU113
- 516 0134 FFF7FEFF 		bl	__aeabi_fmul
- 517              	.LVL72:
- 518 0138 8146     		mov	r9, r0
- 519              	.LVL73:
- 520              		.loc 1 80 30 view .LVU114
- 521 013a 3146     		mov	r1, r6
- 522 013c 0198     		ldr	r0, [sp, #4]	@ float
- 523 013e FFF7FEFF 		bl	__aeabi_fmul
- 524              	.LVL74:
- 525 0142 0146     		mov	r1, r0
- 526              		.loc 1 80 10 view .LVU115
- 527 0144 4846     		mov	r0, r9
- 528 0146 FFF7FEFF 		bl	__aeabi_fsub
- 529              	.LVL75:
- 530 014a 0646     		mov	r6, r0
- 531              	.LVL76:
-  81:Application/MPU6050.c **** 
-  82:Application/MPU6050.c **** 		// Compute and apply integral feedback if enabled
-  83:Application/MPU6050.c ****         // 在PI补偿器中积分项使能情况下计算并应用积分项
-  84:Application/MPU6050.c **** 		if(twoKi > 0.0f) {
- 532              		.loc 1 84 3 is_stmt 1 view .LVU116
- 533              		.loc 1 84 12 is_stmt 0 view .LVU117
- 534 014c B24B     		ldr	r3, .L25+8
- 535 014e 1868     		ldr	r0, [r3]	@ float
- 536              	.LVL77:
- 537              		.loc 1 84 5 view .LVU118
- 538 0150 0021     		movs	r1, #0
- 539 0152 FFF7FEFF 		bl	__aeabi_fcmpgt
- 540              	.LVL78:
- 541 0156 0028     		cmp	r0, #0
- 542 0158 00F0F681 		beq	.L23
-  85:Application/MPU6050.c ****             // integral error scaled by Ki
-  86:Application/MPU6050.c ****             // 积分过程
-  87:Application/MPU6050.c **** 			integralFBx += twoKi * halfex * (1.0f / sampleFreq);	
- 543              		.loc 1 87 4 is_stmt 1 view .LVU119
- 544              		.loc 1 87 25 is_stmt 0 view .LVU120
- 545 015c DFF8B892 		ldr	r9, .L25+8
- 546 0160 D9F80000 		ldr	r0, [r9]	@ float
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 12
+ 605              		.loc 1 86 16 is_stmt 0 view .LVU144
+ 606 00f8 0146     		mov	r1, r0
+ 607 00fa 0298     		ldr	r0, [sp, #8]	@ float
+ 608              	.LVL85:
+ 609              		.loc 1 86 16 view .LVU145
+ 610 00fc FFF7FEFF 		bl	__aeabi_fmul
+ 611              	.LVL86:
+ 612              		.loc 1 86 16 view .LVU146
+ 613 0100 8046     		mov	r8, r0
+ 614              		.loc 1 86 30 view .LVU147
+ 615 0102 4946     		mov	r1, r9
+ 616 0104 5846     		mov	r0, fp
+ 617 0106 FFF7FEFF 		bl	__aeabi_fmul
+ 618              	.LVL87:
+ 619 010a 0146     		mov	r1, r0
+ 620              		.loc 1 86 10 view .LVU148
+ 621 010c 4046     		mov	r0, r8
+ 622 010e FFF7FEFF 		bl	__aeabi_fsub
+ 623              	.LVL88:
+ 624 0112 8046     		mov	r8, r0
+ 625              	.LVL89:
+  87:Application/MPU6050.c **** 		halfey = (az * halfvx - ax * halfvz);
+ 626              		.loc 1 87 3 is_stmt 1 view .LVU149
+ 627              		.loc 1 87 16 is_stmt 0 view .LVU150
+ 628 0114 3146     		mov	r1, r6
+ 629 0116 5846     		mov	r0, fp
+ 630              	.LVL90:
+ 631              		.loc 1 87 16 view .LVU151
+ 632 0118 FFF7FEFF 		bl	__aeabi_fmul
+ 633              	.LVL91:
+ 634 011c 8246     		mov	r10, r0
+ 635              		.loc 1 87 30 view .LVU152
+ 636 011e 3946     		mov	r1, r7
+ 637 0120 DDF80CB0 		ldr	fp, [sp, #12]	@ float
+ 638              	.LVL92:
+ 639              		.loc 1 87 30 view .LVU153
+ 640 0124 5846     		mov	r0, fp
+ 641 0126 FFF7FEFF 		bl	__aeabi_fmul
+ 642              	.LVL93:
+ 643 012a 0146     		mov	r1, r0
+ 644              		.loc 1 87 10 view .LVU154
+ 645 012c 5046     		mov	r0, r10
+ 646 012e FFF7FEFF 		bl	__aeabi_fsub
+ 647              	.LVL94:
+ 648 0132 0746     		mov	r7, r0
+ 649              	.LVL95:
+  88:Application/MPU6050.c **** 		halfez = (ax * halfvy - ay * halfvx);
+ 650              		.loc 1 88 3 is_stmt 1 view .LVU155
+ 651              		.loc 1 88 16 is_stmt 0 view .LVU156
+ 652 0134 4946     		mov	r1, r9
+ 653 0136 5846     		mov	r0, fp
+ 654              	.LVL96:
+ 655              		.loc 1 88 16 view .LVU157
+ 656 0138 FFF7FEFF 		bl	__aeabi_fmul
+ 657              	.LVL97:
+ 658 013c 8146     		mov	r9, r0
+ 659              	.LVL98:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 14
 
 
- 547 0164 4146     		mov	r1, r8
- 548 0166 FFF7FEFF 		bl	__aeabi_fmul
- 549              	.LVL79:
- 550              		.loc 1 87 34 view .LVU121
- 551 016a AC49     		ldr	r1, .L25+12
- 552 016c FFF7FEFF 		bl	__aeabi_fmul
- 553              	.LVL80:
- 554 0170 0146     		mov	r1, r0
- 555              		.loc 1 87 16 view .LVU122
- 556 0172 DFF8ACB2 		ldr	fp, .L25+16
- 557 0176 DBF80000 		ldr	r0, [fp]	@ float
- 558 017a FFF7FEFF 		bl	__aeabi_fadd
- 559              	.LVL81:
- 560 017e CBF80000 		str	r0, [fp]	@ float
-  88:Application/MPU6050.c **** 			integralFBy += twoKi * halfey * (1.0f / sampleFreq);
- 561              		.loc 1 88 4 is_stmt 1 view .LVU123
- 562              		.loc 1 88 25 is_stmt 0 view .LVU124
- 563 0182 D9F80000 		ldr	r0, [r9]	@ float
- 564 0186 3946     		mov	r1, r7
- 565 0188 FFF7FEFF 		bl	__aeabi_fmul
- 566              	.LVL82:
- 567              		.loc 1 88 34 view .LVU125
- 568 018c A349     		ldr	r1, .L25+12
- 569 018e FFF7FEFF 		bl	__aeabi_fmul
- 570              	.LVL83:
- 571 0192 0146     		mov	r1, r0
- 572              		.loc 1 88 16 view .LVU126
- 573 0194 DFF88CA2 		ldr	r10, .L25+20
- 574 0198 DAF80000 		ldr	r0, [r10]	@ float
- 575 019c FFF7FEFF 		bl	__aeabi_fadd
- 576              	.LVL84:
- 577 01a0 CAF80000 		str	r0, [r10]	@ float
-  89:Application/MPU6050.c **** 			integralFBz += twoKi * halfez * (1.0f / sampleFreq);
- 578              		.loc 1 89 4 is_stmt 1 view .LVU127
- 579              		.loc 1 89 25 is_stmt 0 view .LVU128
- 580 01a4 D9F80000 		ldr	r0, [r9]	@ float
- 581 01a8 3146     		mov	r1, r6
- 582 01aa FFF7FEFF 		bl	__aeabi_fmul
- 583              	.LVL85:
- 584              		.loc 1 89 34 view .LVU129
- 585 01ae 9B49     		ldr	r1, .L25+12
- 586 01b0 FFF7FEFF 		bl	__aeabi_fmul
- 587              	.LVL86:
- 588 01b4 0146     		mov	r1, r0
- 589              		.loc 1 89 16 view .LVU130
- 590 01b6 DFF87092 		ldr	r9, .L25+24
- 591 01ba D9F80000 		ldr	r0, [r9]	@ float
- 592 01be FFF7FEFF 		bl	__aeabi_fadd
- 593              	.LVL87:
- 594 01c2 C9F80000 		str	r0, [r9]	@ float
-  90:Application/MPU6050.c ****             
-  91:Application/MPU6050.c ****             // apply integral feedback
-  92:Application/MPU6050.c ****             // 应用误差补偿中的积分项
-  93:Application/MPU6050.c **** 			gx += integralFBx;	
- 595              		.loc 1 93 4 is_stmt 1 view .LVU131
- 596 01c6 DBF80010 		ldr	r1, [fp]	@ float
- 597              		.loc 1 93 7 is_stmt 0 view .LVU132
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 13
+ 660              		.loc 1 88 30 view .LVU158
+ 661 013e 3146     		mov	r1, r6
+ 662 0140 0298     		ldr	r0, [sp, #8]	@ float
+ 663 0142 FFF7FEFF 		bl	__aeabi_fmul
+ 664              	.LVL99:
+ 665 0146 0146     		mov	r1, r0
+ 666              		.loc 1 88 10 view .LVU159
+ 667 0148 4846     		mov	r0, r9
+ 668 014a FFF7FEFF 		bl	__aeabi_fsub
+ 669              	.LVL100:
+ 670 014e 0646     		mov	r6, r0
+ 671              	.LVL101:
+  89:Application/MPU6050.c **** 
+  90:Application/MPU6050.c **** 		// Compute and apply integral feedback if enabled
+  91:Application/MPU6050.c ****         // 在PI补偿器中积分项使能情况下计算并应用积分项
+  92:Application/MPU6050.c **** 		if(twoKiDef > 0.0f) {
+ 672              		.loc 1 92 3 is_stmt 1 view .LVU160
+  93:Application/MPU6050.c ****             // integral error scaled by Ki
+  94:Application/MPU6050.c ****             // 积分过程
+  95:Application/MPU6050.c **** 			integralFBx += twoKiDef * halfex * (1.0f / sampleFreq);	
+ 673              		.loc 1 95 4 view .LVU161
+ 674              		.loc 1 95 28 is_stmt 0 view .LVU162
+ 675 0150 8C49     		ldr	r1, .L20
+ 676 0152 4046     		mov	r0, r8
+ 677              	.LVL102:
+ 678              		.loc 1 95 28 view .LVU163
+ 679 0154 FFF7FEFF 		bl	__aeabi_fmul
+ 680              	.LVL103:
+ 681              		.loc 1 95 37 view .LVU164
+ 682 0158 8B49     		ldr	r1, .L20+4
+ 683 015a FFF7FEFF 		bl	__aeabi_fmul
+ 684              	.LVL104:
+ 685              		.loc 1 95 16 view .LVU165
+ 686 015e DFF82CB2 		ldr	fp, .L20+8
+ 687 0162 DBF80010 		ldr	r1, [fp]	@ float
+ 688 0166 FFF7FEFF 		bl	__aeabi_fadd
+ 689              	.LVL105:
+ 690 016a CBF80000 		str	r0, [fp]	@ float
+  96:Application/MPU6050.c **** 			integralFBy += twoKiDef * halfey * (1.0f / sampleFreq);
+ 691              		.loc 1 96 4 is_stmt 1 view .LVU166
+ 692              		.loc 1 96 28 is_stmt 0 view .LVU167
+ 693 016e 8549     		ldr	r1, .L20
+ 694 0170 3846     		mov	r0, r7
+ 695 0172 FFF7FEFF 		bl	__aeabi_fmul
+ 696              	.LVL106:
+ 697              		.loc 1 96 37 view .LVU168
+ 698 0176 8449     		ldr	r1, .L20+4
+ 699 0178 FFF7FEFF 		bl	__aeabi_fmul
+ 700              	.LVL107:
+ 701              		.loc 1 96 16 view .LVU169
+ 702 017c DFF810A2 		ldr	r10, .L20+12
+ 703 0180 DAF80010 		ldr	r1, [r10]	@ float
+ 704 0184 FFF7FEFF 		bl	__aeabi_fadd
+ 705              	.LVL108:
+ 706 0188 CAF80000 		str	r0, [r10]	@ float
+  97:Application/MPU6050.c **** 			integralFBz += twoKiDef * halfez * (1.0f / sampleFreq);
+ 707              		.loc 1 97 4 is_stmt 1 view .LVU170
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 15
 
 
- 598 01ca 2846     		mov	r0, r5
- 599 01cc FFF7FEFF 		bl	__aeabi_fadd
- 600              	.LVL88:
- 601 01d0 0546     		mov	r5, r0
- 602              	.LVL89:
-  94:Application/MPU6050.c **** 			gy += integralFBy;
- 603              		.loc 1 94 4 is_stmt 1 view .LVU133
- 604 01d2 DAF80010 		ldr	r1, [r10]	@ float
- 605              		.loc 1 94 7 is_stmt 0 view .LVU134
- 606 01d6 0098     		ldr	r0, [sp]	@ float
- 607              	.LVL90:
- 608              		.loc 1 94 7 view .LVU135
- 609 01d8 FFF7FEFF 		bl	__aeabi_fadd
- 610              	.LVL91:
- 611 01dc 0090     		str	r0, [sp]	@ float
- 612              	.LVL92:
-  95:Application/MPU6050.c **** 			gz += integralFBz;
- 613              		.loc 1 95 4 is_stmt 1 view .LVU136
- 614 01de D9F80010 		ldr	r1, [r9]	@ float
- 615              		.loc 1 95 7 is_stmt 0 view .LVU137
- 616 01e2 0E98     		ldr	r0, [sp, #56]	@ float
- 617              	.LVL93:
- 618              		.loc 1 95 7 view .LVU138
- 619 01e4 FFF7FEFF 		bl	__aeabi_fadd
- 620              	.LVL94:
- 621 01e8 0E90     		str	r0, [sp, #56]	@ float
- 622              	.LVL95:
- 623              	.L21:
-  96:Application/MPU6050.c **** 		}
-  97:Application/MPU6050.c **** 		else {
-  98:Application/MPU6050.c ****             // prevent integral windup
-  99:Application/MPU6050.c ****             // 避免为负值的Ki时积分异常饱和
- 100:Application/MPU6050.c **** 			integralFBx = 0.0f;	
- 101:Application/MPU6050.c **** 			integralFBy = 0.0f;
- 102:Application/MPU6050.c **** 			integralFBz = 0.0f;
- 103:Application/MPU6050.c **** 		}
- 104:Application/MPU6050.c **** 
- 105:Application/MPU6050.c **** 		// Apply proportional feedback
- 106:Application/MPU6050.c ****         // 应用误差补偿中的比例项
- 107:Application/MPU6050.c **** 		gx += twoKp * halfex;
- 624              		.loc 1 107 3 is_stmt 1 view .LVU139
- 625              		.loc 1 107 15 is_stmt 0 view .LVU140
- 626 01ea DFF84092 		ldr	r9, .L25+28
- 627 01ee D9F80000 		ldr	r0, [r9]	@ float
- 628 01f2 4146     		mov	r1, r8
- 629 01f4 FFF7FEFF 		bl	__aeabi_fmul
- 630              	.LVL96:
- 631 01f8 0146     		mov	r1, r0
- 632              		.loc 1 107 6 view .LVU141
- 633 01fa 2846     		mov	r0, r5
- 634 01fc FFF7FEFF 		bl	__aeabi_fadd
- 635              	.LVL97:
- 636 0200 0546     		mov	r5, r0
- 637              	.LVL98:
- 108:Application/MPU6050.c **** 		gy += twoKp * halfey;
- 638              		.loc 1 108 3 is_stmt 1 view .LVU142
- 639              		.loc 1 108 15 is_stmt 0 view .LVU143
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 14
+ 708              		.loc 1 97 28 is_stmt 0 view .LVU171
+ 709 018c 7D49     		ldr	r1, .L20
+ 710 018e 3046     		mov	r0, r6
+ 711 0190 FFF7FEFF 		bl	__aeabi_fmul
+ 712              	.LVL109:
+ 713              		.loc 1 97 37 view .LVU172
+ 714 0194 7C49     		ldr	r1, .L20+4
+ 715 0196 FFF7FEFF 		bl	__aeabi_fmul
+ 716              	.LVL110:
+ 717              		.loc 1 97 16 view .LVU173
+ 718 019a DFF8F891 		ldr	r9, .L20+16
+ 719 019e D9F80010 		ldr	r1, [r9]	@ float
+ 720 01a2 FFF7FEFF 		bl	__aeabi_fadd
+ 721              	.LVL111:
+ 722 01a6 C9F80000 		str	r0, [r9]	@ float
+  98:Application/MPU6050.c ****             
+  99:Application/MPU6050.c ****             // apply integral feedback
+ 100:Application/MPU6050.c ****             // 应用误差补偿中的积分项
+ 101:Application/MPU6050.c **** 			gx += integralFBx;	
+ 723              		.loc 1 101 4 is_stmt 1 view .LVU174
+ 724 01aa DBF80010 		ldr	r1, [fp]	@ float
+ 725              		.loc 1 101 7 is_stmt 0 view .LVU175
+ 726 01ae 2846     		mov	r0, r5
+ 727 01b0 FFF7FEFF 		bl	__aeabi_fadd
+ 728              	.LVL112:
+ 729 01b4 0546     		mov	r5, r0
+ 730              	.LVL113:
+ 102:Application/MPU6050.c **** 			gy += integralFBy;
+ 731              		.loc 1 102 4 is_stmt 1 view .LVU176
+ 732 01b6 DAF80010 		ldr	r1, [r10]	@ float
+ 733              		.loc 1 102 7 is_stmt 0 view .LVU177
+ 734 01ba 0098     		ldr	r0, [sp]	@ float
+ 735              	.LVL114:
+ 736              		.loc 1 102 7 view .LVU178
+ 737 01bc FFF7FEFF 		bl	__aeabi_fadd
+ 738              	.LVL115:
+ 739 01c0 8246     		mov	r10, r0
+ 740              	.LVL116:
+ 103:Application/MPU6050.c **** 			gz += integralFBz;
+ 741              		.loc 1 103 4 is_stmt 1 view .LVU179
+ 742 01c2 D9F80010 		ldr	r1, [r9]	@ float
+ 743              		.loc 1 103 7 is_stmt 0 view .LVU180
+ 744 01c6 0198     		ldr	r0, [sp, #4]	@ float
+ 745              	.LVL117:
+ 746              		.loc 1 103 7 view .LVU181
+ 747 01c8 FFF7FEFF 		bl	__aeabi_fadd
+ 748              	.LVL118:
+ 749 01cc 8146     		mov	r9, r0
+ 750              	.LVL119:
+ 104:Application/MPU6050.c **** 		}
+ 105:Application/MPU6050.c **** 		else {
+ 106:Application/MPU6050.c ****             // prevent integral windup
+ 107:Application/MPU6050.c ****             // 避免为负值的Ki时积分异常饱和
+ 108:Application/MPU6050.c **** 			integralFBx = 0.0f;	
+ 109:Application/MPU6050.c **** 			integralFBy = 0.0f;
+ 110:Application/MPU6050.c **** 			integralFBz = 0.0f;
+ 111:Application/MPU6050.c **** 		}
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 16
 
 
- 640 0202 D9F80000 		ldr	r0, [r9]	@ float
- 641              	.LVL99:
- 642              		.loc 1 108 15 view .LVU144
- 643 0206 3946     		mov	r1, r7
- 644 0208 FFF7FEFF 		bl	__aeabi_fmul
- 645              	.LVL100:
- 646 020c 0146     		mov	r1, r0
- 647              		.loc 1 108 6 view .LVU145
- 648 020e 0098     		ldr	r0, [sp]	@ float
- 649 0210 FFF7FEFF 		bl	__aeabi_fadd
- 650              	.LVL101:
- 651 0214 0090     		str	r0, [sp]	@ float
- 652              	.LVL102:
- 109:Application/MPU6050.c **** 		gz += twoKp * halfez;
- 653              		.loc 1 109 3 is_stmt 1 view .LVU146
- 654              		.loc 1 109 15 is_stmt 0 view .LVU147
- 655 0216 D9F80000 		ldr	r0, [r9]	@ float
- 656              	.LVL103:
- 657              		.loc 1 109 15 view .LVU148
- 658 021a 3146     		mov	r1, r6
- 659 021c FFF7FEFF 		bl	__aeabi_fmul
- 660              	.LVL104:
- 661 0220 0146     		mov	r1, r0
- 662              		.loc 1 109 6 view .LVU149
- 663 0222 0E98     		ldr	r0, [sp, #56]	@ float
- 664 0224 FFF7FEFF 		bl	__aeabi_fadd
- 665              	.LVL105:
- 666 0228 0E90     		str	r0, [sp, #56]	@ float
- 667              	.LVL106:
- 668              	.L17:
- 110:Application/MPU6050.c **** 	}
- 111:Application/MPU6050.c **** 	
- 112:Application/MPU6050.c **** 	// Integrate rate of change of quaternion
- 113:Application/MPU6050.c ****     // 微分方程迭代求解
- 114:Application/MPU6050.c **** 	gx *= (0.5f * (1.0f / sampleFreq));		// pre-multiply common factors
- 669              		.loc 1 114 2 is_stmt 1 view .LVU150
- 670              		.loc 1 114 5 is_stmt 0 view .LVU151
- 671 022a 8149     		ldr	r1, .L25+32
- 672 022c 2846     		mov	r0, r5
- 673 022e FFF7FEFF 		bl	__aeabi_fmul
- 674              	.LVL107:
- 675 0232 0646     		mov	r6, r0
- 676              	.LVL108:
- 115:Application/MPU6050.c **** 	gy *= (0.5f * (1.0f / sampleFreq));
- 677              		.loc 1 115 2 is_stmt 1 view .LVU152
- 678              		.loc 1 115 5 is_stmt 0 view .LVU153
- 679 0234 7E49     		ldr	r1, .L25+32
- 680 0236 0098     		ldr	r0, [sp]	@ float
- 681              	.LVL109:
- 682              		.loc 1 115 5 view .LVU154
- 683 0238 FFF7FEFF 		bl	__aeabi_fmul
- 684              	.LVL110:
- 685 023c 8046     		mov	r8, r0
- 686              	.LVL111:
- 116:Application/MPU6050.c **** 	gz *= (0.5f * (1.0f / sampleFreq));
- 687              		.loc 1 116 2 is_stmt 1 view .LVU155
- 688              		.loc 1 116 5 is_stmt 0 view .LVU156
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 15
+ 112:Application/MPU6050.c **** 
+ 113:Application/MPU6050.c **** 		// Apply proportional feedback
+ 114:Application/MPU6050.c ****         // 应用误差补偿中的比例项
+ 115:Application/MPU6050.c **** 		gx += twoKpDef * halfex;
+ 751              		.loc 1 115 3 is_stmt 1 view .LVU182
+ 752              		.loc 1 115 18 is_stmt 0 view .LVU183
+ 753 01ce 7249     		ldr	r1, .L20+20
+ 754 01d0 4046     		mov	r0, r8
+ 755              	.LVL120:
+ 756              		.loc 1 115 18 view .LVU184
+ 757 01d2 FFF7FEFF 		bl	__aeabi_fmul
+ 758              	.LVL121:
+ 759              		.loc 1 115 6 view .LVU185
+ 760 01d6 2946     		mov	r1, r5
+ 761 01d8 FFF7FEFF 		bl	__aeabi_fadd
+ 762              	.LVL122:
+ 763 01dc 0546     		mov	r5, r0
+ 764              	.LVL123:
+ 116:Application/MPU6050.c **** 		gy += twoKpDef * halfey;
+ 765              		.loc 1 116 3 is_stmt 1 view .LVU186
+ 766              		.loc 1 116 18 is_stmt 0 view .LVU187
+ 767 01de 6E49     		ldr	r1, .L20+20
+ 768 01e0 3846     		mov	r0, r7
+ 769              	.LVL124:
+ 770              		.loc 1 116 18 view .LVU188
+ 771 01e2 FFF7FEFF 		bl	__aeabi_fmul
+ 772              	.LVL125:
+ 773              		.loc 1 116 6 view .LVU189
+ 774 01e6 5146     		mov	r1, r10
+ 775 01e8 FFF7FEFF 		bl	__aeabi_fadd
+ 776              	.LVL126:
+ 777 01ec 0090     		str	r0, [sp]	@ float
+ 778              	.LVL127:
+ 117:Application/MPU6050.c **** 		gz += twoKpDef * halfez;
+ 779              		.loc 1 117 3 is_stmt 1 view .LVU190
+ 780              		.loc 1 117 18 is_stmt 0 view .LVU191
+ 781 01ee 6A49     		ldr	r1, .L20+20
+ 782 01f0 3046     		mov	r0, r6
+ 783              	.LVL128:
+ 784              		.loc 1 117 18 view .LVU192
+ 785 01f2 FFF7FEFF 		bl	__aeabi_fmul
+ 786              	.LVL129:
+ 787              		.loc 1 117 6 view .LVU193
+ 788 01f6 4946     		mov	r1, r9
+ 789 01f8 FFF7FEFF 		bl	__aeabi_fadd
+ 790              	.LVL130:
+ 791 01fc 0190     		str	r0, [sp, #4]	@ float
+ 792              	.LVL131:
+ 793              	.L17:
+ 118:Application/MPU6050.c **** 	}
+ 119:Application/MPU6050.c **** 	
+ 120:Application/MPU6050.c **** 	// Integrate rate of change of quaternion
+ 121:Application/MPU6050.c ****     // 微分方程迭代求解
+ 122:Application/MPU6050.c **** 	gx *= (0.5f * (1.0f / sampleFreq));		// pre-multiply common factors
+ 794              		.loc 1 122 2 is_stmt 1 view .LVU194
+ 795              		.loc 1 122 5 is_stmt 0 view .LVU195
+ 796 01fe 6749     		ldr	r1, .L20+24
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 17
 
 
- 689 023e 7C49     		ldr	r1, .L25+32
- 690 0240 0E98     		ldr	r0, [sp, #56]	@ float
- 691              	.LVL112:
- 692              		.loc 1 116 5 view .LVU157
- 693 0242 FFF7FEFF 		bl	__aeabi_fmul
- 694              	.LVL113:
- 695 0246 0746     		mov	r7, r0
- 696              	.LVL114:
- 117:Application/MPU6050.c **** 	qa = q[0];
- 697              		.loc 1 117 2 is_stmt 1 view .LVU158
- 698              		.loc 1 117 5 is_stmt 0 view .LVU159
- 699 0248 D4F800B0 		ldr	fp, [r4]	@ float
- 700              	.LVL115:
- 118:Application/MPU6050.c **** 	qb = q[1];
- 701              		.loc 1 118 2 is_stmt 1 view .LVU160
- 702              		.loc 1 118 5 is_stmt 0 view .LVU161
- 703 024c D4F804A0 		ldr	r10, [r4, #4]	@ float
- 704              	.LVL116:
- 119:Application/MPU6050.c **** 	qc = q[2];
- 705              		.loc 1 119 2 is_stmt 1 view .LVU162
- 706              		.loc 1 119 5 is_stmt 0 view .LVU163
- 707 0250 D4F80890 		ldr	r9, [r4, #8]	@ float
- 708              	.LVL117:
- 120:Application/MPU6050.c **** 	q[0] += (-qb * gx - qc * gy - q[3] * gz); 
- 709              		.loc 1 120 2 is_stmt 1 view .LVU164
- 710              		.loc 1 120 11 is_stmt 0 view .LVU165
- 711 0254 0AF10040 		add	r0, r10, #-2147483648
- 712              	.LVL118:
- 713              		.loc 1 120 15 view .LVU166
- 714 0258 3146     		mov	r1, r6
- 715 025a FFF7FEFF 		bl	__aeabi_fmul
- 716              	.LVL119:
- 717 025e 0546     		mov	r5, r0
- 718              		.loc 1 120 25 view .LVU167
- 719 0260 4946     		mov	r1, r9
- 720 0262 CDF80080 		str	r8, [sp]	@ float
- 721 0266 4046     		mov	r0, r8
- 722 0268 FFF7FEFF 		bl	__aeabi_fmul
- 723              	.LVL120:
- 724 026c 0146     		mov	r1, r0
- 725              		.loc 1 120 20 view .LVU168
- 726 026e 2846     		mov	r0, r5
- 727 0270 FFF7FEFF 		bl	__aeabi_fsub
- 728              	.LVL121:
- 729 0274 0546     		mov	r5, r0
- 730              		.loc 1 120 33 view .LVU169
- 731 0276 D4F80C80 		ldr	r8, [r4, #12]	@ float
- 732              	.LVL122:
- 733              		.loc 1 120 37 view .LVU170
- 734 027a 3946     		mov	r1, r7
- 735 027c 4046     		mov	r0, r8
- 736 027e FFF7FEFF 		bl	__aeabi_fmul
- 737              	.LVL123:
- 738 0282 0146     		mov	r1, r0
- 739              		.loc 1 120 30 view .LVU171
- 740 0284 2846     		mov	r0, r5
- 741 0286 FFF7FEFF 		bl	__aeabi_fsub
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 16
+ 797 0200 2846     		mov	r0, r5
+ 798 0202 FFF7FEFF 		bl	__aeabi_fmul
+ 799              	.LVL132:
+ 800 0206 0546     		mov	r5, r0
+ 801              	.LVL133:
+ 123:Application/MPU6050.c **** 	gy *= (0.5f * (1.0f / sampleFreq));
+ 802              		.loc 1 123 2 is_stmt 1 view .LVU196
+ 803              		.loc 1 123 5 is_stmt 0 view .LVU197
+ 804 0208 6449     		ldr	r1, .L20+24
+ 805 020a 0098     		ldr	r0, [sp]	@ float
+ 806              	.LVL134:
+ 807              		.loc 1 123 5 view .LVU198
+ 808 020c FFF7FEFF 		bl	__aeabi_fmul
+ 809              	.LVL135:
+ 810 0210 0646     		mov	r6, r0
+ 811              	.LVL136:
+ 124:Application/MPU6050.c **** 	gz *= (0.5f * (1.0f / sampleFreq));
+ 812              		.loc 1 124 2 is_stmt 1 view .LVU199
+ 813              		.loc 1 124 5 is_stmt 0 view .LVU200
+ 814 0212 6249     		ldr	r1, .L20+24
+ 815 0214 0198     		ldr	r0, [sp, #4]	@ float
+ 816              	.LVL137:
+ 817              		.loc 1 124 5 view .LVU201
+ 818 0216 FFF7FEFF 		bl	__aeabi_fmul
+ 819              	.LVL138:
+ 820 021a 0746     		mov	r7, r0
+ 821              	.LVL139:
+ 125:Application/MPU6050.c **** 	qa = q[0];
+ 822              		.loc 1 125 2 is_stmt 1 view .LVU202
+ 823              		.loc 1 125 5 is_stmt 0 view .LVU203
+ 824 021c D4F800B0 		ldr	fp, [r4]	@ float
+ 825              	.LVL140:
+ 126:Application/MPU6050.c **** 	qb = q[1];
+ 826              		.loc 1 126 2 is_stmt 1 view .LVU204
+ 827              		.loc 1 126 5 is_stmt 0 view .LVU205
+ 828 0220 D4F804A0 		ldr	r10, [r4, #4]	@ float
+ 829              	.LVL141:
+ 127:Application/MPU6050.c **** 	qc = q[2];
+ 830              		.loc 1 127 2 is_stmt 1 view .LVU206
+ 831              		.loc 1 127 5 is_stmt 0 view .LVU207
+ 832 0224 D4F80890 		ldr	r9, [r4, #8]	@ float
+ 833              	.LVL142:
+ 128:Application/MPU6050.c **** 	q[0] += (-qb * gx - qc * gy - q[3] * gz); 
+ 834              		.loc 1 128 2 is_stmt 1 view .LVU208
+ 835              		.loc 1 128 11 is_stmt 0 view .LVU209
+ 836 0228 0AF10040 		add	r0, r10, #-2147483648
+ 837              	.LVL143:
+ 838              		.loc 1 128 15 view .LVU210
+ 839 022c 0095     		str	r5, [sp]	@ float
+ 840 022e 2946     		mov	r1, r5
+ 841 0230 FFF7FEFF 		bl	__aeabi_fmul
+ 842              	.LVL144:
+ 843 0234 0546     		mov	r5, r0
+ 844              	.LVL145:
+ 845              		.loc 1 128 25 view .LVU211
+ 846 0236 4946     		mov	r1, r9
+ 847 0238 3046     		mov	r0, r6
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 18
 
 
- 742              	.LVL124:
- 743              		.loc 1 120 7 view .LVU172
- 744 028a 5946     		mov	r1, fp
- 745 028c FFF7FEFF 		bl	__aeabi_fadd
- 746              	.LVL125:
- 747 0290 0390     		str	r0, [sp, #12]	@ float
- 748 0292 2060     		str	r0, [r4]	@ float
- 121:Application/MPU6050.c **** 	q[1] += (qa * gx + qc * gz - q[3] * gy);
- 749              		.loc 1 121 2 is_stmt 1 view .LVU173
- 750              		.loc 1 121 14 is_stmt 0 view .LVU174
- 751 0294 5946     		mov	r1, fp
- 752 0296 0196     		str	r6, [sp, #4]	@ float
- 753 0298 3046     		mov	r0, r6
- 754 029a FFF7FEFF 		bl	__aeabi_fmul
- 755              	.LVL126:
- 756 029e 0546     		mov	r5, r0
- 757              		.loc 1 121 24 view .LVU175
- 758 02a0 4946     		mov	r1, r9
- 759 02a2 3846     		mov	r0, r7
- 760 02a4 FFF7FEFF 		bl	__aeabi_fmul
- 761              	.LVL127:
- 762 02a8 0146     		mov	r1, r0
- 763              		.loc 1 121 19 view .LVU176
- 764 02aa 2846     		mov	r0, r5
- 765 02ac FFF7FEFF 		bl	__aeabi_fadd
- 766              	.LVL128:
- 767 02b0 0546     		mov	r5, r0
- 768              		.loc 1 121 36 view .LVU177
- 769 02b2 0099     		ldr	r1, [sp]	@ float
- 770 02b4 4046     		mov	r0, r8
- 771 02b6 FFF7FEFF 		bl	__aeabi_fmul
- 772              	.LVL129:
- 773 02ba 0146     		mov	r1, r0
- 774              		.loc 1 121 29 view .LVU178
- 775 02bc 2846     		mov	r0, r5
- 776 02be FFF7FEFF 		bl	__aeabi_fsub
- 777              	.LVL130:
- 778              		.loc 1 121 7 view .LVU179
- 779 02c2 5146     		mov	r1, r10
- 780 02c4 FFF7FEFF 		bl	__aeabi_fadd
- 781              	.LVL131:
- 782 02c8 0646     		mov	r6, r0
- 783              	.LVL132:
- 784              		.loc 1 121 7 view .LVU180
- 785 02ca 6060     		str	r0, [r4, #4]	@ float
- 122:Application/MPU6050.c **** 	q[2] += (qa * gy - qb * gz + q[3] * gx);
- 786              		.loc 1 122 2 is_stmt 1 view .LVU181
- 787              		.loc 1 122 14 is_stmt 0 view .LVU182
- 788 02cc 5946     		mov	r1, fp
- 789 02ce 0098     		ldr	r0, [sp]	@ float
- 790 02d0 FFF7FEFF 		bl	__aeabi_fmul
- 791              	.LVL133:
- 792 02d4 0546     		mov	r5, r0
- 793              		.loc 1 122 24 view .LVU183
- 794 02d6 5146     		mov	r1, r10
- 795 02d8 3846     		mov	r0, r7
- 796 02da FFF7FEFF 		bl	__aeabi_fmul
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 17
-
-
- 797              	.LVL134:
- 798 02de 0146     		mov	r1, r0
- 799              		.loc 1 122 19 view .LVU184
- 800 02e0 2846     		mov	r0, r5
- 801 02e2 FFF7FEFF 		bl	__aeabi_fsub
- 802              	.LVL135:
- 803 02e6 0546     		mov	r5, r0
- 804              		.loc 1 122 36 view .LVU185
- 805 02e8 0199     		ldr	r1, [sp, #4]	@ float
- 806 02ea 4046     		mov	r0, r8
- 807 02ec FFF7FEFF 		bl	__aeabi_fmul
- 808              	.LVL136:
- 809 02f0 0146     		mov	r1, r0
- 810              		.loc 1 122 29 view .LVU186
- 811 02f2 2846     		mov	r0, r5
- 812 02f4 FFF7FEFF 		bl	__aeabi_fadd
- 813              	.LVL137:
- 814              		.loc 1 122 7 view .LVU187
- 815 02f8 4946     		mov	r1, r9
- 816 02fa FFF7FEFF 		bl	__aeabi_fadd
- 817              	.LVL138:
- 818 02fe 0546     		mov	r5, r0
- 819 0300 A060     		str	r0, [r4, #8]	@ float
- 123:Application/MPU6050.c **** 	q[3] += (qa * gz + qb * gy - qc * gx); 
- 820              		.loc 1 123 2 is_stmt 1 view .LVU188
- 821              		.loc 1 123 14 is_stmt 0 view .LVU189
- 822 0302 5946     		mov	r1, fp
- 823 0304 3846     		mov	r0, r7
- 824 0306 FFF7FEFF 		bl	__aeabi_fmul
- 825              	.LVL139:
- 826 030a 0746     		mov	r7, r0
- 827              	.LVL140:
- 828              		.loc 1 123 24 view .LVU190
- 829 030c 5146     		mov	r1, r10
- 830 030e 0098     		ldr	r0, [sp]	@ float
- 831 0310 FFF7FEFF 		bl	__aeabi_fmul
- 832              	.LVL141:
- 833 0314 0146     		mov	r1, r0
- 834              		.loc 1 123 19 view .LVU191
- 835 0316 3846     		mov	r0, r7
- 836 0318 FFF7FEFF 		bl	__aeabi_fadd
- 837              	.LVL142:
- 838 031c 0746     		mov	r7, r0
- 839              		.loc 1 123 34 view .LVU192
- 840 031e 4946     		mov	r1, r9
- 841 0320 0198     		ldr	r0, [sp, #4]	@ float
- 842 0322 FFF7FEFF 		bl	__aeabi_fmul
- 843              	.LVL143:
- 844 0326 0146     		mov	r1, r0
- 845              		.loc 1 123 29 view .LVU193
- 846 0328 3846     		mov	r0, r7
- 847 032a FFF7FEFF 		bl	__aeabi_fsub
- 848              	.LVL144:
- 849 032e 0146     		mov	r1, r0
- 850              		.loc 1 123 7 view .LVU194
- 851 0330 4046     		mov	r0, r8
- 852 0332 FFF7FEFF 		bl	__aeabi_fadd
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 18
-
-
- 853              	.LVL145:
- 854 0336 0746     		mov	r7, r0
- 855 0338 E060     		str	r0, [r4, #12]	@ float
- 124:Application/MPU6050.c **** 	
- 125:Application/MPU6050.c **** 	// Normalise quaternion
- 126:Application/MPU6050.c ****     // 单位化四元数 保证四元数在迭代过程中保持单位性质
- 127:Application/MPU6050.c **** 	recipNorm = invSqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
- 856              		.loc 1 127 2 is_stmt 1 view .LVU195
- 857              		.loc 1 127 27 is_stmt 0 view .LVU196
- 858 033a DDF80C90 		ldr	r9, [sp, #12]	@ float
- 859              	.LVL146:
- 860              		.loc 1 127 27 view .LVU197
- 861 033e 4946     		mov	r1, r9
- 862 0340 4846     		mov	r0, r9
- 863 0342 FFF7FEFF 		bl	__aeabi_fmul
- 864              	.LVL147:
- 865 0346 8046     		mov	r8, r0
- 866              		.loc 1 127 41 view .LVU198
- 867 0348 3146     		mov	r1, r6
- 868 034a 3046     		mov	r0, r6
- 869 034c FFF7FEFF 		bl	__aeabi_fmul
- 870              	.LVL148:
- 871 0350 0146     		mov	r1, r0
- 872              		.loc 1 127 34 view .LVU199
- 873 0352 4046     		mov	r0, r8
- 874 0354 FFF7FEFF 		bl	__aeabi_fadd
- 875              	.LVL149:
- 876 0358 8046     		mov	r8, r0
- 877              		.loc 1 127 55 view .LVU200
- 878 035a 2946     		mov	r1, r5
- 879 035c 2846     		mov	r0, r5
- 880 035e FFF7FEFF 		bl	__aeabi_fmul
- 881              	.LVL150:
- 882 0362 0146     		mov	r1, r0
- 883              		.loc 1 127 48 view .LVU201
- 884 0364 4046     		mov	r0, r8
- 885 0366 FFF7FEFF 		bl	__aeabi_fadd
- 886              	.LVL151:
- 887 036a 8046     		mov	r8, r0
- 888              		.loc 1 127 69 view .LVU202
- 889 036c 3946     		mov	r1, r7
- 890 036e 3846     		mov	r0, r7
- 891 0370 FFF7FEFF 		bl	__aeabi_fmul
- 892              	.LVL152:
- 893 0374 0146     		mov	r1, r0
- 894              		.loc 1 127 14 view .LVU203
- 895 0376 4046     		mov	r0, r8
- 896 0378 FFF7FEFF 		bl	__aeabi_fadd
- 897              	.LVL153:
- 898 037c FFF7FEFF 		bl	invSqrt
- 899              	.LVL154:
- 900 0380 8046     		mov	r8, r0
+ 848 023a FFF7FEFF 		bl	__aeabi_fmul
+ 849              	.LVL146:
+ 850 023e 0146     		mov	r1, r0
+ 851              		.loc 1 128 20 view .LVU212
+ 852 0240 2846     		mov	r0, r5
+ 853 0242 FFF7FEFF 		bl	__aeabi_fsub
+ 854              	.LVL147:
+ 855 0246 0546     		mov	r5, r0
+ 856              		.loc 1 128 33 view .LVU213
+ 857 0248 D4F80C80 		ldr	r8, [r4, #12]	@ float
+ 858              		.loc 1 128 37 view .LVU214
+ 859 024c 3946     		mov	r1, r7
+ 860 024e 4046     		mov	r0, r8
+ 861 0250 FFF7FEFF 		bl	__aeabi_fmul
+ 862              	.LVL148:
+ 863 0254 0146     		mov	r1, r0
+ 864              		.loc 1 128 30 view .LVU215
+ 865 0256 2846     		mov	r0, r5
+ 866 0258 FFF7FEFF 		bl	__aeabi_fsub
+ 867              	.LVL149:
+ 868              		.loc 1 128 7 view .LVU216
+ 869 025c 5946     		mov	r1, fp
+ 870 025e FFF7FEFF 		bl	__aeabi_fadd
+ 871              	.LVL150:
+ 872 0262 0190     		str	r0, [sp, #4]	@ float
+ 873 0264 2060     		str	r0, [r4]	@ float
+ 129:Application/MPU6050.c **** 	q[1] += (qa * gx + qc * gz - q[3] * gy);
+ 874              		.loc 1 129 2 is_stmt 1 view .LVU217
+ 875              		.loc 1 129 14 is_stmt 0 view .LVU218
+ 876 0266 5946     		mov	r1, fp
+ 877 0268 0098     		ldr	r0, [sp]	@ float
+ 878 026a FFF7FEFF 		bl	__aeabi_fmul
+ 879              	.LVL151:
+ 880 026e 0546     		mov	r5, r0
+ 881              		.loc 1 129 24 view .LVU219
+ 882 0270 4946     		mov	r1, r9
+ 883 0272 3846     		mov	r0, r7
+ 884 0274 FFF7FEFF 		bl	__aeabi_fmul
+ 885              	.LVL152:
+ 886 0278 0146     		mov	r1, r0
+ 887              		.loc 1 129 19 view .LVU220
+ 888 027a 2846     		mov	r0, r5
+ 889 027c FFF7FEFF 		bl	__aeabi_fadd
+ 890              	.LVL153:
+ 891 0280 0546     		mov	r5, r0
+ 892              		.loc 1 129 36 view .LVU221
+ 893 0282 3146     		mov	r1, r6
+ 894 0284 4046     		mov	r0, r8
+ 895 0286 FFF7FEFF 		bl	__aeabi_fmul
+ 896              	.LVL154:
+ 897 028a 0146     		mov	r1, r0
+ 898              		.loc 1 129 29 view .LVU222
+ 899 028c 2846     		mov	r0, r5
+ 900 028e FFF7FEFF 		bl	__aeabi_fsub
  901              	.LVL155:
- 128:Application/MPU6050.c **** 	q[0] *= recipNorm;
- 902              		.loc 1 128 2 is_stmt 1 view .LVU204
- 903              		.loc 1 128 7 is_stmt 0 view .LVU205
- 904 0382 0146     		mov	r1, r0
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 19
+ 902              		.loc 1 129 7 view .LVU223
+ 903 0292 5146     		mov	r1, r10
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 19
 
 
- 905 0384 4846     		mov	r0, r9
- 906              	.LVL156:
- 907              		.loc 1 128 7 view .LVU206
- 908 0386 FFF7FEFF 		bl	__aeabi_fmul
- 909              	.LVL157:
- 910              		.loc 1 128 7 view .LVU207
- 911 038a 8146     		mov	r9, r0
- 912 038c 2060     		str	r0, [r4]	@ float
- 129:Application/MPU6050.c **** 	q[1] *= recipNorm;
- 913              		.loc 1 129 2 is_stmt 1 view .LVU208
- 914              		.loc 1 129 7 is_stmt 0 view .LVU209
- 915 038e 4146     		mov	r1, r8
- 916 0390 3046     		mov	r0, r6
- 917 0392 FFF7FEFF 		bl	__aeabi_fmul
- 918              	.LVL158:
- 919 0396 0646     		mov	r6, r0
- 920 0398 6060     		str	r0, [r4, #4]	@ float
- 130:Application/MPU6050.c **** 	q[2] *= recipNorm;
- 921              		.loc 1 130 2 is_stmt 1 view .LVU210
- 922              		.loc 1 130 7 is_stmt 0 view .LVU211
- 923 039a 4146     		mov	r1, r8
- 924 039c 2846     		mov	r0, r5
- 925 039e FFF7FEFF 		bl	__aeabi_fmul
- 926              	.LVL159:
- 927 03a2 0546     		mov	r5, r0
- 928 03a4 A060     		str	r0, [r4, #8]	@ float
- 131:Application/MPU6050.c **** 	q[3] *= recipNorm;
- 929              		.loc 1 131 2 is_stmt 1 view .LVU212
- 930              		.loc 1 131 7 is_stmt 0 view .LVU213
- 931 03a6 4146     		mov	r1, r8
- 932 03a8 3846     		mov	r0, r7
- 933 03aa FFF7FEFF 		bl	__aeabi_fmul
- 934              	.LVL160:
- 935 03ae 0146     		mov	r1, r0
- 936 03b0 E060     		str	r0, [r4, #12]	@ float
- 132:Application/MPU6050.c ****     
- 133:Application/MPU6050.c **** 
- 134:Application/MPU6050.c ****     mf->Pitch = asinf(-2.0f * (q[1]*q[3] - q[0]*q[2])) * 180.0f / M_PI;
- 937              		.loc 1 134 5 is_stmt 1 view .LVU214
- 938              		.loc 1 134 36 is_stmt 0 view .LVU215
- 939 03b2 3046     		mov	r0, r6
- 940 03b4 FFF7FEFF 		bl	__aeabi_fmul
- 941              	.LVL161:
- 942 03b8 0646     		mov	r6, r0
- 943              		.loc 1 134 48 view .LVU216
- 944 03ba 2946     		mov	r1, r5
- 945 03bc 4846     		mov	r0, r9
- 946 03be FFF7FEFF 		bl	__aeabi_fmul
- 947              	.LVL162:
- 948 03c2 0146     		mov	r1, r0
- 949              		.loc 1 134 42 view .LVU217
- 950 03c4 3046     		mov	r0, r6
- 951 03c6 FFF7FEFF 		bl	__aeabi_fsub
- 952              	.LVL163:
- 953              		.loc 1 134 17 view .LVU218
- 954 03ca 4FF04041 		mov	r1, #-1073741824
- 955 03ce FFF7FEFF 		bl	__aeabi_fmul
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 20
+ 904 0294 FFF7FEFF 		bl	__aeabi_fadd
+ 905              	.LVL156:
+ 906 0298 0290     		str	r0, [sp, #8]	@ float
+ 907 029a 6060     		str	r0, [r4, #4]	@ float
+ 130:Application/MPU6050.c **** 	q[2] += (qa * gy - qb * gz + q[3] * gx);
+ 908              		.loc 1 130 2 is_stmt 1 view .LVU224
+ 909              		.loc 1 130 14 is_stmt 0 view .LVU225
+ 910 029c 5946     		mov	r1, fp
+ 911 029e 3046     		mov	r0, r6
+ 912 02a0 FFF7FEFF 		bl	__aeabi_fmul
+ 913              	.LVL157:
+ 914 02a4 0546     		mov	r5, r0
+ 915              		.loc 1 130 24 view .LVU226
+ 916 02a6 5146     		mov	r1, r10
+ 917 02a8 3846     		mov	r0, r7
+ 918 02aa FFF7FEFF 		bl	__aeabi_fmul
+ 919              	.LVL158:
+ 920 02ae 0146     		mov	r1, r0
+ 921              		.loc 1 130 19 view .LVU227
+ 922 02b0 2846     		mov	r0, r5
+ 923 02b2 FFF7FEFF 		bl	__aeabi_fsub
+ 924              	.LVL159:
+ 925 02b6 0546     		mov	r5, r0
+ 926              		.loc 1 130 36 view .LVU228
+ 927 02b8 0099     		ldr	r1, [sp]	@ float
+ 928 02ba 4046     		mov	r0, r8
+ 929 02bc FFF7FEFF 		bl	__aeabi_fmul
+ 930              	.LVL160:
+ 931 02c0 0146     		mov	r1, r0
+ 932              		.loc 1 130 29 view .LVU229
+ 933 02c2 2846     		mov	r0, r5
+ 934 02c4 FFF7FEFF 		bl	__aeabi_fadd
+ 935              	.LVL161:
+ 936              		.loc 1 130 7 view .LVU230
+ 937 02c8 4946     		mov	r1, r9
+ 938 02ca FFF7FEFF 		bl	__aeabi_fadd
+ 939              	.LVL162:
+ 940 02ce 0546     		mov	r5, r0
+ 941 02d0 A060     		str	r0, [r4, #8]	@ float
+ 131:Application/MPU6050.c **** 	q[3] += (qa * gz + qb * gy - qc * gx); 
+ 942              		.loc 1 131 2 is_stmt 1 view .LVU231
+ 943              		.loc 1 131 14 is_stmt 0 view .LVU232
+ 944 02d2 5946     		mov	r1, fp
+ 945 02d4 3846     		mov	r0, r7
+ 946 02d6 FFF7FEFF 		bl	__aeabi_fmul
+ 947              	.LVL163:
+ 948 02da 0746     		mov	r7, r0
+ 949              	.LVL164:
+ 950              		.loc 1 131 24 view .LVU233
+ 951 02dc 5146     		mov	r1, r10
+ 952 02de 3046     		mov	r0, r6
+ 953 02e0 FFF7FEFF 		bl	__aeabi_fmul
+ 954              	.LVL165:
+ 955 02e4 0146     		mov	r1, r0
+ 956              		.loc 1 131 19 view .LVU234
+ 957 02e6 3846     		mov	r0, r7
+ 958 02e8 FFF7FEFF 		bl	__aeabi_fadd
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 20
 
 
- 956              	.LVL164:
- 957 03d2 FFF7FEFF 		bl	asinf
- 958              	.LVL165:
- 959              		.loc 1 134 56 view .LVU219
- 960 03d6 1749     		ldr	r1, .L25+36
- 961 03d8 FFF7FEFF 		bl	__aeabi_fmul
- 962              	.LVL166:
- 963 03dc FFF7FEFF 		bl	__aeabi_f2d
- 964              	.LVL167:
- 965              		.loc 1 134 65 view .LVU220
- 966 03e0 0BA3     		adr	r3, .L25
- 967 03e2 D3E90023 		ldrd	r2, [r3]
- 968 03e6 FFF7FEFF 		bl	__aeabi_ddiv
- 969              	.LVL168:
- 970 03ea FFF7FEFF 		bl	__aeabi_d2f
+ 959              	.LVL166:
+ 960 02ec 0646     		mov	r6, r0
+ 961              	.LVL167:
+ 962              		.loc 1 131 34 view .LVU235
+ 963 02ee 4946     		mov	r1, r9
+ 964 02f0 0098     		ldr	r0, [sp]	@ float
+ 965 02f2 FFF7FEFF 		bl	__aeabi_fmul
+ 966              	.LVL168:
+ 967 02f6 0146     		mov	r1, r0
+ 968              		.loc 1 131 29 view .LVU236
+ 969 02f8 3046     		mov	r0, r6
+ 970 02fa FFF7FEFF 		bl	__aeabi_fsub
  971              	.LVL169:
- 972              		.loc 1 134 15 view .LVU221
- 973 03ee DDF808A0 		ldr	r10, [sp, #8]
- 974              	.LVL170:
- 975              		.loc 1 134 15 view .LVU222
- 976 03f2 CAF80000 		str	r0, [r10]	@ float
- 135:Application/MPU6050.c ****     mf->Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), 
- 977              		.loc 1 135 5 is_stmt 1 view .LVU223
- 978              		.loc 1 135 32 is_stmt 0 view .LVU224
- 979 03f6 2668     		ldr	r6, [r4]	@ float
- 980              		.loc 1 135 37 view .LVU225
- 981 03f8 D4F80490 		ldr	r9, [r4, #4]	@ float
- 982              		.loc 1 135 35 view .LVU226
- 983 03fc 4946     		mov	r1, r9
- 984 03fe 3046     		mov	r0, r6
- 985 0400 FFF7FEFF 		bl	__aeabi_fmul
- 986              	.LVL171:
- 987 0404 0546     		mov	r5, r0
- 988              		.loc 1 135 44 view .LVU227
- 989 0406 D4F80880 		ldr	r8, [r4, #8]	@ float
- 990              	.LVL172:
- 991              		.loc 1 135 49 view .LVU228
- 992 040a E768     		ldr	r7, [r4, #12]	@ float
- 993              		.loc 1 135 47 view .LVU229
- 994 040c 3946     		mov	r1, r7
- 995 040e 13E0     		b	.L26
- 996              	.L27:
- 997              		.align	3
- 998              	.L25:
- 999 0410 182D4454 		.word	1413754136
- 1000 0414 FB210940 		.word	1074340347
- 1001 0418 00000000 		.word	twoKi
- 1002 041c 6F12833A 		.word	981668463
- 1003 0420 00000000 		.word	integralFBx
- 1004 0424 00000000 		.word	integralFBy
- 1005 0428 00000000 		.word	integralFBz
- 1006 042c 00000000 		.word	twoKp
- 1007 0430 6F12033A 		.word	973279855
- 1008 0434 00003443 		.word	1127481344
- 1009              	.L26:
- 1010 0438 4046     		mov	r0, r8
- 1011 043a FFF7FEFF 		bl	__aeabi_fmul
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 21
+ 972 02fe 0146     		mov	r1, r0
+ 973              		.loc 1 131 7 view .LVU237
+ 974 0300 4046     		mov	r0, r8
+ 975 0302 FFF7FEFF 		bl	__aeabi_fadd
+ 976              	.LVL170:
+ 977 0306 0646     		mov	r6, r0
+ 978 0308 E060     		str	r0, [r4, #12]	@ float
+ 132:Application/MPU6050.c **** 	
+ 133:Application/MPU6050.c **** 	// Normalise quaternion
+ 134:Application/MPU6050.c ****     // 单位化四元数 保证四元数在迭代过程中保持单位性质
+ 135:Application/MPU6050.c **** 	recipNorm = invSqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+ 979              		.loc 1 135 2 is_stmt 1 view .LVU238
+ 980              		.loc 1 135 27 is_stmt 0 view .LVU239
+ 981 030a DDF80480 		ldr	r8, [sp, #4]	@ float
+ 982 030e 4146     		mov	r1, r8
+ 983 0310 4046     		mov	r0, r8
+ 984 0312 FFF7FEFF 		bl	__aeabi_fmul
+ 985              	.LVL171:
+ 986 0316 0746     		mov	r7, r0
+ 987              		.loc 1 135 41 view .LVU240
+ 988 0318 DDF80890 		ldr	r9, [sp, #8]	@ float
+ 989              	.LVL172:
+ 990              		.loc 1 135 41 view .LVU241
+ 991 031c 4946     		mov	r1, r9
+ 992 031e 4846     		mov	r0, r9
+ 993 0320 FFF7FEFF 		bl	__aeabi_fmul
+ 994              	.LVL173:
+ 995 0324 0146     		mov	r1, r0
+ 996              		.loc 1 135 34 view .LVU242
+ 997 0326 3846     		mov	r0, r7
+ 998 0328 FFF7FEFF 		bl	__aeabi_fadd
+ 999              	.LVL174:
+ 1000 032c 0746     		mov	r7, r0
+ 1001              		.loc 1 135 55 view .LVU243
+ 1002 032e 2946     		mov	r1, r5
+ 1003 0330 2846     		mov	r0, r5
+ 1004 0332 FFF7FEFF 		bl	__aeabi_fmul
+ 1005              	.LVL175:
+ 1006 0336 0146     		mov	r1, r0
+ 1007              		.loc 1 135 48 view .LVU244
+ 1008 0338 3846     		mov	r0, r7
+ 1009 033a FFF7FEFF 		bl	__aeabi_fadd
+ 1010              	.LVL176:
+ 1011 033e 0746     		mov	r7, r0
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 21
 
 
- 1012              	.LVL173:
- 1013 043e 0146     		mov	r1, r0
- 1014              		.loc 1 135 41 view .LVU230
- 1015 0440 2846     		mov	r0, r5
- 1016 0442 FFF7FEFF 		bl	__aeabi_fadd
- 1017              	.LVL174:
- 1018 0446 0546     		mov	r5, r0
- 136:Application/MPU6050.c ****                       q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]) * 180.0f / M_PI;
- 1019              		.loc 1 136 27 view .LVU231
- 1020 0448 3146     		mov	r1, r6
- 1021 044a 3046     		mov	r0, r6
- 1022 044c FFF7FEFF 		bl	__aeabi_fmul
- 1023              	.LVL175:
- 1024 0450 0646     		mov	r6, r0
- 1025              		.loc 1 136 39 view .LVU232
- 1026 0452 4946     		mov	r1, r9
- 1027 0454 4846     		mov	r0, r9
- 1028 0456 FFF7FEFF 		bl	__aeabi_fmul
- 1029              	.LVL176:
- 1030 045a 0146     		mov	r1, r0
- 1031              		.loc 1 136 33 view .LVU233
- 1032 045c 3046     		mov	r0, r6
- 1033 045e FFF7FEFF 		bl	__aeabi_fsub
- 1034              	.LVL177:
- 1035 0462 0646     		mov	r6, r0
- 1036              		.loc 1 136 51 view .LVU234
- 1037 0464 4146     		mov	r1, r8
- 1038 0466 4046     		mov	r0, r8
- 1039 0468 FFF7FEFF 		bl	__aeabi_fmul
- 1040              	.LVL178:
- 1041 046c 0146     		mov	r1, r0
- 1042              		.loc 1 136 45 view .LVU235
- 1043 046e 3046     		mov	r0, r6
- 1044 0470 FFF7FEFF 		bl	__aeabi_fsub
- 1045              	.LVL179:
- 1046 0474 0646     		mov	r6, r0
- 1047              		.loc 1 136 63 view .LVU236
- 1048 0476 3946     		mov	r1, r7
- 1049 0478 3846     		mov	r0, r7
- 1050 047a FFF7FEFF 		bl	__aeabi_fmul
- 1051              	.LVL180:
- 1052 047e 0146     		mov	r1, r0
- 135:Application/MPU6050.c ****     mf->Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), 
- 1053              		.loc 1 135 16 view .LVU237
- 1054 0480 3046     		mov	r0, r6
- 1055 0482 FFF7FEFF 		bl	__aeabi_fadd
- 1056              	.LVL181:
- 1057 0486 0646     		mov	r6, r0
- 1058 0488 2946     		mov	r1, r5
- 1059 048a 2846     		mov	r0, r5
- 1060 048c FFF7FEFF 		bl	__aeabi_fadd
- 1061              	.LVL182:
- 1062 0490 3146     		mov	r1, r6
- 1063 0492 FFF7FEFF 		bl	atan2f
- 1064              	.LVL183:
- 1065              		.loc 1 136 70 view .LVU238
- 1066 0496 3249     		ldr	r1, .L28+8
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 22
+ 1012              		.loc 1 135 69 view .LVU245
+ 1013 0340 3146     		mov	r1, r6
+ 1014 0342 3046     		mov	r0, r6
+ 1015 0344 FFF7FEFF 		bl	__aeabi_fmul
+ 1016              	.LVL177:
+ 1017 0348 0146     		mov	r1, r0
+ 1018              		.loc 1 135 14 view .LVU246
+ 1019 034a 3846     		mov	r0, r7
+ 1020 034c FFF7FEFF 		bl	__aeabi_fadd
+ 1021              	.LVL178:
+ 1022 0350 FFF7FEFF 		bl	invSqrt
+ 1023              	.LVL179:
+ 1024 0354 0746     		mov	r7, r0
+ 1025              	.LVL180:
+ 136:Application/MPU6050.c **** 	q[0] *= recipNorm;
+ 1026              		.loc 1 136 2 is_stmt 1 view .LVU247
+ 1027              		.loc 1 136 7 is_stmt 0 view .LVU248
+ 1028 0356 0146     		mov	r1, r0
+ 1029 0358 4046     		mov	r0, r8
+ 1030              	.LVL181:
+ 1031              		.loc 1 136 7 view .LVU249
+ 1032 035a FFF7FEFF 		bl	__aeabi_fmul
+ 1033              	.LVL182:
+ 1034              		.loc 1 136 7 view .LVU250
+ 1035 035e 2060     		str	r0, [r4]	@ float
+ 137:Application/MPU6050.c **** 	q[1] *= recipNorm;
+ 1036              		.loc 1 137 2 is_stmt 1 view .LVU251
+ 1037              		.loc 1 137 7 is_stmt 0 view .LVU252
+ 1038 0360 3946     		mov	r1, r7
+ 1039 0362 4846     		mov	r0, r9
+ 1040 0364 FFF7FEFF 		bl	__aeabi_fmul
+ 1041              	.LVL183:
+ 1042 0368 6060     		str	r0, [r4, #4]	@ float
+ 138:Application/MPU6050.c **** 	q[2] *= recipNorm;
+ 1043              		.loc 1 138 2 is_stmt 1 view .LVU253
+ 1044              		.loc 1 138 7 is_stmt 0 view .LVU254
+ 1045 036a 3946     		mov	r1, r7
+ 1046 036c 2846     		mov	r0, r5
+ 1047 036e FFF7FEFF 		bl	__aeabi_fmul
+ 1048              	.LVL184:
+ 1049 0372 A060     		str	r0, [r4, #8]	@ float
+ 139:Application/MPU6050.c **** 	q[3] *= recipNorm;}
+ 1050              		.loc 1 139 2 is_stmt 1 view .LVU255
+ 1051              		.loc 1 139 7 is_stmt 0 view .LVU256
+ 1052 0374 3946     		mov	r1, r7
+ 1053 0376 3046     		mov	r0, r6
+ 1054 0378 FFF7FEFF 		bl	__aeabi_fmul
+ 1055              	.LVL185:
+ 1056 037c E060     		str	r0, [r4, #12]	@ float
+ 1057              		.loc 1 139 20 view .LVU257
+ 1058 037e 05B0     		add	sp, sp, #20
+ 1059              	.LCFI9:
+ 1060              		.cfi_def_cfa_offset 36
+ 1061              	.LVL186:
+ 1062              		.loc 1 139 20 view .LVU258
+ 1063              		@ sp needed
+ 1064 0380 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 22
 
 
- 1067 0498 FFF7FEFF 		bl	__aeabi_fmul
- 1068              	.LVL184:
- 1069 049c FFF7FEFF 		bl	__aeabi_f2d
- 1070              	.LVL185:
- 1071              		.loc 1 136 79 view .LVU239
- 1072 04a0 2DA3     		adr	r3, .L28
- 1073 04a2 D3E90023 		ldrd	r2, [r3]
- 1074 04a6 FFF7FEFF 		bl	__aeabi_ddiv
- 1075              	.LVL186:
- 1076 04aa FFF7FEFF 		bl	__aeabi_d2f
- 1077              	.LVL187:
- 135:Application/MPU6050.c ****     mf->Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), 
- 1078              		.loc 1 135 14 view .LVU240
- 1079 04ae CAF80400 		str	r0, [r10, #4]	@ float
- 137:Application/MPU6050.c ****     mf->Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), 
- 1080              		.loc 1 137 5 is_stmt 1 view .LVU241
- 1081              		.loc 1 137 31 is_stmt 0 view .LVU242
- 1082 04b2 D4F80480 		ldr	r8, [r4, #4]	@ float
- 1083              		.loc 1 137 36 view .LVU243
- 1084 04b6 A768     		ldr	r7, [r4, #8]	@ float
- 1085              		.loc 1 137 34 view .LVU244
- 1086 04b8 3946     		mov	r1, r7
- 1087 04ba 4046     		mov	r0, r8
- 1088 04bc FFF7FEFF 		bl	__aeabi_fmul
- 1089              	.LVL188:
- 1090 04c0 8146     		mov	r9, r0
- 1091              		.loc 1 137 43 view .LVU245
- 1092 04c2 2568     		ldr	r5, [r4]	@ float
- 1093              		.loc 1 137 48 view .LVU246
- 1094 04c4 E668     		ldr	r6, [r4, #12]	@ float
- 1095              		.loc 1 137 46 view .LVU247
- 1096 04c6 3146     		mov	r1, r6
- 1097 04c8 2846     		mov	r0, r5
- 1098 04ca FFF7FEFF 		bl	__aeabi_fmul
- 1099              	.LVL189:
- 1100 04ce 0146     		mov	r1, r0
- 1101              		.loc 1 137 40 view .LVU248
- 1102 04d0 4846     		mov	r0, r9
- 1103 04d2 FFF7FEFF 		bl	__aeabi_fadd
- 1104              	.LVL190:
- 1105 04d6 0446     		mov	r4, r0
- 1106              	.LVL191:
- 138:Application/MPU6050.c ****                      q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]) * 180.0f / M_PI;
- 1107              		.loc 1 138 26 view .LVU249
- 1108 04d8 2946     		mov	r1, r5
- 1109 04da 2846     		mov	r0, r5
- 1110 04dc FFF7FEFF 		bl	__aeabi_fmul
- 1111              	.LVL192:
- 1112 04e0 0546     		mov	r5, r0
- 1113              		.loc 1 138 38 view .LVU250
- 1114 04e2 4146     		mov	r1, r8
- 1115 04e4 4046     		mov	r0, r8
- 1116 04e6 FFF7FEFF 		bl	__aeabi_fmul
- 1117              	.LVL193:
- 1118 04ea 0146     		mov	r1, r0
- 1119              		.loc 1 138 32 view .LVU251
- 1120 04ec 2846     		mov	r0, r5
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 23
+ 1065              	.LVL187:
+ 1066              	.L21:
+ 1067              		.loc 1 139 20 view .LVU259
+ 1068              		.align	2
+ 1069              	.L20:
+ 1070 0384 6F12033B 		.word	990057071
+ 1071 0388 6F12833A 		.word	981668463
+ 1072 038c 00000000 		.word	integralFBx
+ 1073 0390 00000000 		.word	integralFBy
+ 1074 0394 00000000 		.word	integralFBz
+ 1075 0398 00002642 		.word	1109786624
+ 1076 039c 6F12033A 		.word	973279855
+ 1077              		.cfi_endproc
+ 1078              	.LFE68:
+ 1080              		.section	.text.calculate,"ax",%progbits
+ 1081              		.align	1
+ 1082              		.global	calculate
+ 1083              		.syntax unified
+ 1084              		.thumb
+ 1085              		.thumb_func
+ 1087              	calculate:
+ 1088              	.LFB69:
+ 140:Application/MPU6050.c ****     
+ 141:Application/MPU6050.c **** void calculate(void)
+ 142:Application/MPU6050.c **** {
+ 1089              		.loc 1 142 1 is_stmt 1 view -0
+ 1090              		.cfi_startproc
+ 1091              		@ args = 0, pretend = 0, frame = 16
+ 1092              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1093 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1094              	.LCFI10:
+ 1095              		.cfi_def_cfa_offset 36
+ 1096              		.cfi_offset 4, -36
+ 1097              		.cfi_offset 5, -32
+ 1098              		.cfi_offset 6, -28
+ 1099              		.cfi_offset 7, -24
+ 1100              		.cfi_offset 8, -20
+ 1101              		.cfi_offset 9, -16
+ 1102              		.cfi_offset 10, -12
+ 1103              		.cfi_offset 11, -8
+ 1104              		.cfi_offset 14, -4
+ 1105 0004 85B0     		sub	sp, sp, #20
+ 1106              	.LCFI11:
+ 1107              		.cfi_def_cfa_offset 56
+ 143:Application/MPU6050.c **** 	MPU6050_ReadRawData(&mf);
+ 1108              		.loc 1 143 2 view .LVU261
+ 1109 0006 564C     		ldr	r4, .L24+8
+ 1110 0008 2046     		mov	r0, r4
+ 1111 000a FFF7FEFF 		bl	MPU6050_ReadRawData
+ 1112              	.LVL188:
+ 144:Application/MPU6050.c **** 	MahonyAHRSupdateIMU(&mf, q);
+ 1113              		.loc 1 144 2 view .LVU262
+ 1114 000e 554F     		ldr	r7, .L24+12
+ 1115 0010 3946     		mov	r1, r7
+ 1116 0012 2046     		mov	r0, r4
+ 1117 0014 FFF7FEFF 		bl	MahonyAHRSupdateIMU
+ 1118              	.LVL189:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 23
 
 
- 1121 04ee FFF7FEFF 		bl	__aeabi_fadd
- 1122              	.LVL194:
- 1123 04f2 0546     		mov	r5, r0
- 1124              		.loc 1 138 50 view .LVU252
- 1125 04f4 3946     		mov	r1, r7
- 1126 04f6 3846     		mov	r0, r7
- 1127 04f8 FFF7FEFF 		bl	__aeabi_fmul
- 1128              	.LVL195:
- 1129 04fc 0146     		mov	r1, r0
- 1130              		.loc 1 138 44 view .LVU253
- 1131 04fe 2846     		mov	r0, r5
- 1132 0500 FFF7FEFF 		bl	__aeabi_fsub
- 1133              	.LVL196:
- 1134 0504 0546     		mov	r5, r0
- 1135              		.loc 1 138 62 view .LVU254
- 1136 0506 3146     		mov	r1, r6
- 1137 0508 3046     		mov	r0, r6
- 1138 050a FFF7FEFF 		bl	__aeabi_fmul
- 1139              	.LVL197:
- 1140 050e 0146     		mov	r1, r0
- 137:Application/MPU6050.c ****     mf->Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), 
- 1141              		.loc 1 137 15 view .LVU255
- 1142 0510 2846     		mov	r0, r5
- 1143 0512 FFF7FEFF 		bl	__aeabi_fsub
- 1144              	.LVL198:
- 1145 0516 0546     		mov	r5, r0
- 1146 0518 2146     		mov	r1, r4
- 1147 051a 2046     		mov	r0, r4
- 1148 051c FFF7FEFF 		bl	__aeabi_fadd
- 1149              	.LVL199:
- 1150 0520 2946     		mov	r1, r5
- 1151 0522 FFF7FEFF 		bl	atan2f
- 1152              	.LVL200:
- 1153              		.loc 1 138 69 view .LVU256
- 1154 0526 0E49     		ldr	r1, .L28+8
- 1155 0528 FFF7FEFF 		bl	__aeabi_fmul
- 1156              	.LVL201:
- 1157 052c FFF7FEFF 		bl	__aeabi_f2d
- 1158              	.LVL202:
- 1159              		.loc 1 138 78 view .LVU257
- 1160 0530 09A3     		adr	r3, .L28
- 1161 0532 D3E90023 		ldrd	r2, [r3]
- 1162 0536 FFF7FEFF 		bl	__aeabi_ddiv
- 1163              	.LVL203:
- 1164 053a FFF7FEFF 		bl	__aeabi_d2f
- 1165              	.LVL204:
- 137:Application/MPU6050.c ****     mf->Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), 
- 1166              		.loc 1 137 13 view .LVU258
- 1167 053e CAF80800 		str	r0, [r10, #8]	@ float
- 139:Application/MPU6050.c **** }...
- 1168              		.loc 1 139 1 view .LVU259
- 1169 0542 05B0     		add	sp, sp, #20
- 1170              	.LCFI9:
- 1171              		.cfi_remember_state
- 1172              		.cfi_def_cfa_offset 36
- 1173              	.LVL205:
- 1174              		.loc 1 139 1 view .LVU260
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 24
+ 145:Application/MPU6050.c ****     n.Pitch = asinf(-2.0f * (q[1]*q[3] - q[0]*q[2])) * 180.0f / M_PI;
+ 1119              		.loc 1 145 5 view .LVU263
+ 1120              		.loc 1 145 31 is_stmt 0 view .LVU264
+ 1121 0018 7E68     		ldr	r6, [r7, #4]	@ float
+ 1122              		.loc 1 145 36 view .LVU265
+ 1123 001a FC68     		ldr	r4, [r7, #12]	@ float
+ 1124              		.loc 1 145 34 view .LVU266
+ 1125 001c 2146     		mov	r1, r4
+ 1126 001e 3046     		mov	r0, r6
+ 1127 0020 FFF7FEFF 		bl	__aeabi_fmul
+ 1128              	.LVL190:
+ 1129 0024 8046     		mov	r8, r0
+ 1130              		.loc 1 145 43 view .LVU267
+ 1131 0026 3D68     		ldr	r5, [r7]	@ float
+ 1132              		.loc 1 145 48 view .LVU268
+ 1133 0028 BF68     		ldr	r7, [r7, #8]	@ float
+ 1134              		.loc 1 145 46 view .LVU269
+ 1135 002a 3946     		mov	r1, r7
+ 1136 002c 2846     		mov	r0, r5
+ 1137 002e FFF7FEFF 		bl	__aeabi_fmul
+ 1138              	.LVL191:
+ 1139 0032 0146     		mov	r1, r0
+ 1140              		.loc 1 145 40 view .LVU270
+ 1141 0034 4046     		mov	r0, r8
+ 1142 0036 FFF7FEFF 		bl	__aeabi_fsub
+ 1143              	.LVL192:
+ 1144              		.loc 1 145 15 view .LVU271
+ 1145 003a 4FF04041 		mov	r1, #-1073741824
+ 1146 003e FFF7FEFF 		bl	__aeabi_fmul
+ 1147              	.LVL193:
+ 1148 0042 FFF7FEFF 		bl	asinf
+ 1149              	.LVL194:
+ 1150              		.loc 1 145 54 view .LVU272
+ 1151 0046 4849     		ldr	r1, .L24+16
+ 1152 0048 FFF7FEFF 		bl	__aeabi_fmul
+ 1153              	.LVL195:
+ 1154 004c FFF7FEFF 		bl	__aeabi_f2d
+ 1155              	.LVL196:
+ 1156              		.loc 1 145 63 view .LVU273
+ 1157 0050 41A3     		adr	r3, .L24
+ 1158 0052 D3E90023 		ldrd	r2, [r3]
+ 1159 0056 FFF7FEFF 		bl	__aeabi_ddiv
+ 1160              	.LVL197:
+ 1161 005a FFF7FEFF 		bl	__aeabi_d2f
+ 1162              	.LVL198:
+ 1163              		.loc 1 145 13 view .LVU274
+ 1164 005e DFF80CA1 		ldr	r10, .L24+20
+ 1165 0062 CAF80000 		str	r0, [r10]	@ float
+ 146:Application/MPU6050.c ****     n.Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]) 
+ 1166              		.loc 1 146 5 is_stmt 1 view .LVU275
+ 1167              		.loc 1 146 33 is_stmt 0 view .LVU276
+ 1168 0066 2946     		mov	r1, r5
+ 1169 0068 3046     		mov	r0, r6
+ 1170 006a FFF7FEFF 		bl	__aeabi_fmul
+ 1171              	.LVL199:
+ 1172 006e 8046     		mov	r8, r0
+ 1173              		.loc 1 146 45 view .LVU277
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 24
 
 
- 1175              		@ sp needed
- 1176 0544 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
- 1177              	.LVL206:
- 1178              	.L23:
- 1179              	.LCFI10:
- 1180              		.cfi_restore_state
- 100:Application/MPU6050.c **** 			integralFBx = 0.0f;	
- 1181              		.loc 1 100 4 is_stmt 1 view .LVU261
- 100:Application/MPU6050.c **** 			integralFBx = 0.0f;	
- 1182              		.loc 1 100 16 is_stmt 0 view .LVU262
- 1183 0548 0023     		movs	r3, #0
- 1184 054a 064A     		ldr	r2, .L28+12
- 1185 054c 1360     		str	r3, [r2]	@ float
- 101:Application/MPU6050.c **** 			integralFBy = 0.0f;
- 1186              		.loc 1 101 4 is_stmt 1 view .LVU263
- 101:Application/MPU6050.c **** 			integralFBy = 0.0f;
- 1187              		.loc 1 101 16 is_stmt 0 view .LVU264
- 1188 054e 064A     		ldr	r2, .L28+16
- 1189 0550 1360     		str	r3, [r2]	@ float
- 102:Application/MPU6050.c **** 			integralFBz = 0.0f;
- 1190              		.loc 1 102 4 is_stmt 1 view .LVU265
- 102:Application/MPU6050.c **** 			integralFBz = 0.0f;
- 1191              		.loc 1 102 16 is_stmt 0 view .LVU266
- 1192 0552 064A     		ldr	r2, .L28+20
- 1193 0554 1360     		str	r3, [r2]	@ float
- 1194 0556 48E6     		b	.L21
- 1195              	.L29:
- 1196              		.align	3
- 1197              	.L28:
- 1198 0558 182D4454 		.word	1413754136
- 1199 055c FB210940 		.word	1074340347
- 1200 0560 00003443 		.word	1127481344
- 1201 0564 00000000 		.word	integralFBx
- 1202 0568 00000000 		.word	integralFBy
- 1203 056c 00000000 		.word	integralFBz
- 1204              		.cfi_endproc
- 1205              	.LFE68:
- 1207              		.global	integralFBz
- 1208              		.section	.bss.integralFBz,"aw",%nobits
- 1209              		.align	2
- 1212              	integralFBz:
- 1213 0000 00000000 		.space	4
- 1214              		.global	integralFBy
- 1215              		.section	.bss.integralFBy,"aw",%nobits
- 1216              		.align	2
- 1219              	integralFBy:
- 1220 0000 00000000 		.space	4
- 1221              		.global	integralFBx
- 1222              		.section	.bss.integralFBx,"aw",%nobits
- 1223              		.align	2
- 1226              	integralFBx:
- 1227 0000 00000000 		.space	4
- 1228              		.global	twoKi
- 1229              		.section	.bss.twoKi,"aw",%nobits
- 1230              		.align	2
- 1233              	twoKi:
- 1234 0000 00000000 		.space	4
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 25
+ 1174 0070 3946     		mov	r1, r7
+ 1175 0072 2046     		mov	r0, r4
+ 1176 0074 FFF7FEFF 		bl	__aeabi_fmul
+ 1177              	.LVL200:
+ 1178 0078 0146     		mov	r1, r0
+ 1179              		.loc 1 146 39 view .LVU278
+ 1180 007a 4046     		mov	r0, r8
+ 1181 007c FFF7FEFF 		bl	__aeabi_fadd
+ 1182              	.LVL201:
+ 1183 0080 8146     		mov	r9, r0
+ 1184              		.loc 1 146 57 view .LVU279
+ 1185 0082 2946     		mov	r1, r5
+ 1186 0084 2846     		mov	r0, r5
+ 1187 0086 FFF7FEFF 		bl	__aeabi_fmul
+ 1188              	.LVL202:
+ 1189 008a 8346     		mov	fp, r0
+ 1190              		.loc 1 146 69 view .LVU280
+ 1191 008c 3146     		mov	r1, r6
+ 1192 008e 3046     		mov	r0, r6
+ 1193 0090 FFF7FEFF 		bl	__aeabi_fmul
+ 1194              	.LVL203:
+ 1195 0094 8046     		mov	r8, r0
+ 1196              		.loc 1 146 63 view .LVU281
+ 1197 0096 0146     		mov	r1, r0
+ 1198 0098 CDF804B0 		str	fp, [sp, #4]	@ float
+ 1199 009c 5846     		mov	r0, fp
+ 1200 009e FFF7FEFF 		bl	__aeabi_fsub
+ 1201              	.LVL204:
+ 1202 00a2 8346     		mov	fp, r0
+ 1203              		.loc 1 146 81 view .LVU282
+ 1204 00a4 3946     		mov	r1, r7
+ 1205 00a6 3846     		mov	r0, r7
+ 1206 00a8 FFF7FEFF 		bl	__aeabi_fmul
+ 1207              	.LVL205:
+ 1208              		.loc 1 146 75 view .LVU283
+ 1209 00ac 0290     		str	r0, [sp, #8]	@ float
+ 1210 00ae 0146     		mov	r1, r0
+ 1211 00b0 5846     		mov	r0, fp
+ 1212 00b2 FFF7FEFF 		bl	__aeabi_fsub
+ 1213              	.LVL206:
+ 1214 00b6 8346     		mov	fp, r0
+ 1215              		.loc 1 146 93 view .LVU284
+ 1216 00b8 2146     		mov	r1, r4
+ 1217 00ba 2046     		mov	r0, r4
+ 1218 00bc FFF7FEFF 		bl	__aeabi_fmul
+ 1219              	.LVL207:
+ 1220              		.loc 1 146 14 view .LVU285
+ 1221 00c0 0390     		str	r0, [sp, #12]	@ float
+ 1222 00c2 0146     		mov	r1, r0
+ 1223 00c4 5846     		mov	r0, fp
+ 1224 00c6 FFF7FEFF 		bl	__aeabi_fadd
+ 1225              	.LVL208:
+ 1226 00ca 8346     		mov	fp, r0
+ 1227 00cc 4946     		mov	r1, r9
+ 1228 00ce 4846     		mov	r0, r9
+ 1229 00d0 FFF7FEFF 		bl	__aeabi_fadd
+ 1230              	.LVL209:
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 25
 
 
- 1235              		.global	twoKp
- 1236              		.section	.data.twoKp,"aw"
- 1237              		.align	2
- 1240              	twoKp:
- 1241 0000 0000803F 		.word	1065353216
- 1242              		.text
- 1243              	.Letext0:
- 1244              		.file 2 "d:\\rw\\ozone\\mingw64\\arm-none-eabi\\include\\machine\\_default_types.h"
- 1245              		.file 3 "d:\\rw\\ozone\\mingw64\\arm-none-eabi\\include\\sys\\_stdint.h"
- 1246              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
- 1247              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
- 1248              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
- 1249              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
- 1250              		.file 8 "Application/MPU6050.h"
- 1251              		.file 9 "d:\\rw\\ozone\\mingw64\\arm-none-eabi\\include\\math.h"
-ARM GAS  C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s 			page 26
+ 1231 00d4 5946     		mov	r1, fp
+ 1232 00d6 FFF7FEFF 		bl	atan2f
+ 1233              	.LVL210:
+ 1234              		.loc 1 146 100 view .LVU286
+ 1235 00da 2349     		ldr	r1, .L24+16
+ 1236 00dc FFF7FEFF 		bl	__aeabi_fmul
+ 1237              	.LVL211:
+ 1238 00e0 FFF7FEFF 		bl	__aeabi_f2d
+ 1239              	.LVL212:
+ 1240              		.loc 1 146 109 view .LVU287
+ 1241 00e4 1CA3     		adr	r3, .L24
+ 1242 00e6 D3E90023 		ldrd	r2, [r3]
+ 1243 00ea FFF7FEFF 		bl	__aeabi_ddiv
+ 1244              	.LVL213:
+ 1245 00ee FFF7FEFF 		bl	__aeabi_d2f
+ 1246              	.LVL214:
+ 1247              		.loc 1 146 12 view .LVU288
+ 1248 00f2 CAF80400 		str	r0, [r10, #4]	@ float
+ 147:Application/MPU6050.c ****     n.Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]) *
+ 1249              		.loc 1 147 5 is_stmt 1 view .LVU289
+ 1250              		.loc 1 147 32 is_stmt 0 view .LVU290
+ 1251 00f6 3946     		mov	r1, r7
+ 1252 00f8 3046     		mov	r0, r6
+ 1253 00fa FFF7FEFF 		bl	__aeabi_fmul
+ 1254              	.LVL215:
+ 1255 00fe 0646     		mov	r6, r0
+ 1256              		.loc 1 147 44 view .LVU291
+ 1257 0100 2946     		mov	r1, r5
+ 1258 0102 2046     		mov	r0, r4
+ 1259 0104 FFF7FEFF 		bl	__aeabi_fmul
+ 1260              	.LVL216:
+ 1261 0108 0146     		mov	r1, r0
+ 1262              		.loc 1 147 38 view .LVU292
+ 1263 010a 3046     		mov	r0, r6
+ 1264 010c FFF7FEFF 		bl	__aeabi_fadd
+ 1265              	.LVL217:
+ 1266 0110 0446     		mov	r4, r0
+ 1267              		.loc 1 147 62 view .LVU293
+ 1268 0112 4146     		mov	r1, r8
+ 1269 0114 0198     		ldr	r0, [sp, #4]	@ float
+ 1270 0116 FFF7FEFF 		bl	__aeabi_fadd
+ 1271              	.LVL218:
+ 1272              		.loc 1 147 74 view .LVU294
+ 1273 011a 0299     		ldr	r1, [sp, #8]	@ float
+ 1274 011c FFF7FEFF 		bl	__aeabi_fsub
+ 1275              	.LVL219:
+ 1276              		.loc 1 147 13 view .LVU295
+ 1277 0120 0399     		ldr	r1, [sp, #12]	@ float
+ 1278 0122 FFF7FEFF 		bl	__aeabi_fsub
+ 1279              	.LVL220:
+ 1280 0126 0546     		mov	r5, r0
+ 1281 0128 2146     		mov	r1, r4
+ 1282 012a 2046     		mov	r0, r4
+ 1283 012c FFF7FEFF 		bl	__aeabi_fadd
+ 1284              	.LVL221:
+ 1285 0130 2946     		mov	r1, r5
+ 1286 0132 FFF7FEFF 		bl	atan2f
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 26
+
+
+ 1287              	.LVL222:
+ 1288              		.loc 1 147 99 view .LVU296
+ 1289 0136 0C49     		ldr	r1, .L24+16
+ 1290 0138 FFF7FEFF 		bl	__aeabi_fmul
+ 1291              	.LVL223:
+ 1292 013c FFF7FEFF 		bl	__aeabi_f2d
+ 1293              	.LVL224:
+ 1294              		.loc 1 147 108 view .LVU297
+ 1295 0140 05A3     		adr	r3, .L24
+ 1296 0142 D3E90023 		ldrd	r2, [r3]
+ 1297 0146 FFF7FEFF 		bl	__aeabi_ddiv
+ 1298              	.LVL225:
+ 1299 014a FFF7FEFF 		bl	__aeabi_d2f
+ 1300              	.LVL226:
+ 1301              		.loc 1 147 11 view .LVU298
+ 1302 014e CAF80800 		str	r0, [r10, #8]	@ float
+ 148:Application/MPU6050.c **** }
+ 1303              		.loc 1 148 1 view .LVU299
+ 1304 0152 05B0     		add	sp, sp, #20
+ 1305              	.LCFI12:
+ 1306              		.cfi_def_cfa_offset 36
+ 1307              		@ sp needed
+ 1308 0154 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1309              	.L25:
+ 1310              		.align	3
+ 1311              	.L24:
+ 1312 0158 182D4454 		.word	1413754136
+ 1313 015c FB210940 		.word	1074340347
+ 1314 0160 00000000 		.word	mf
+ 1315 0164 00000000 		.word	q
+ 1316 0168 00003443 		.word	1127481344
+ 1317 016c 00000000 		.word	n
+ 1318              		.cfi_endproc
+ 1319              	.LFE69:
+ 1321              		.global	q
+ 1322              		.section	.data.q,"aw"
+ 1323              		.align	2
+ 1326              	q:
+ 1327 0000 0000803F 		.word	1065353216
+ 1328 0004 00000000 		.word	0
+ 1329 0008 00000000 		.word	0
+ 1330 000c 00000000 		.word	0
+ 1331              		.global	integralFBz
+ 1332              		.section	.bss.integralFBz,"aw",%nobits
+ 1333              		.align	2
+ 1336              	integralFBz:
+ 1337 0000 00000000 		.space	4
+ 1338              		.global	integralFBy
+ 1339              		.section	.bss.integralFBy,"aw",%nobits
+ 1340              		.align	2
+ 1343              	integralFBy:
+ 1344 0000 00000000 		.space	4
+ 1345              		.global	integralFBx
+ 1346              		.section	.bss.integralFBx,"aw",%nobits
+ 1347              		.align	2
+ 1350              	integralFBx:
+ 1351 0000 00000000 		.space	4
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 27
+
+
+ 1352              		.global	mf
+ 1353              		.section	.bss.mf,"aw",%nobits
+ 1354              		.align	2
+ 1357              	mf:
+ 1358 0000 00000000 		.space	24
+ 1358      00000000 
+ 1358      00000000 
+ 1358      00000000 
+ 1358      00000000 
+ 1359              		.global	n
+ 1360              		.section	.bss.n,"aw",%nobits
+ 1361              		.align	2
+ 1364              	n:
+ 1365 0000 00000000 		.space	12
+ 1365      00000000 
+ 1365      00000000 
+ 1366              		.text
+ 1367              	.Letext0:
+ 1368              		.file 2 "d:\\rw\\msys2\\mingw64\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1369              		.file 3 "d:\\rw\\msys2\\mingw64\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1370              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 1371              		.file 5 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 1372              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 1373              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 1374              		.file 8 "Application/MPU6050.h"
+ 1375              		.file 9 "d:\\rw\\msys2\\mingw64\\arm-none-eabi\\include\\math.h"
+ARM GAS  C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s 			page 28
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 MPU6050.c
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:19     .text.MPU6050_Init:00000000 $t
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:25     .text.MPU6050_Init:00000000 MPU6050_Init
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:97     .text.MPU6050_Init:00000060 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:102    .text.MPU6050_ReadRawData:00000000 $t
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:108    .text.MPU6050_ReadRawData:00000000 MPU6050_ReadRawData
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:162    .text.MPU6050_ReadRawData:00000024 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:170    .text.invSqrt:00000000 $t
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:176    .text.invSqrt:00000000 invSqrt
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:248    .text.invSqrt:00000044 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:259    .text.MahonyAHRSupdateIMU:00000000 $t
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:265    .text.MahonyAHRSupdateIMU:00000000 MahonyAHRSupdateIMU
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:999    .text.MahonyAHRSupdateIMU:00000410 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1233   .bss.twoKi:00000000 twoKi
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1226   .bss.integralFBx:00000000 integralFBx
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1219   .bss.integralFBy:00000000 integralFBy
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1212   .bss.integralFBz:00000000 integralFBz
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1240   .data.twoKp:00000000 twoKp
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1010   .text.MahonyAHRSupdateIMU:00000438 $t
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1198   .text.MahonyAHRSupdateIMU:00000558 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1209   .bss.integralFBz:00000000 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1216   .bss.integralFBy:00000000 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1223   .bss.integralFBx:00000000 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1230   .bss.twoKi:00000000 $d
-C:\Users\ASUS\AppData\Local\Temp\ccSI5wim.s:1237   .data.twoKp:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:19     .text.MPU6050_Init:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:25     .text.MPU6050_Init:00000000 MPU6050_Init
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:97     .text.MPU6050_Init:00000060 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:108    .text.MPU6050_ReadRawData:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:114    .text.MPU6050_ReadRawData:00000000 MPU6050_ReadRawData
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:281    .text.MPU6050_ReadRawData:00000100 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:291    .text.invSqrt:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:297    .text.invSqrt:00000000 invSqrt
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:369    .text.invSqrt:00000044 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:376    .text.MahonyAHRSupdateIMU:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:382    .text.MahonyAHRSupdateIMU:00000000 MahonyAHRSupdateIMU
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1070   .text.MahonyAHRSupdateIMU:00000384 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1350   .bss.integralFBx:00000000 integralFBx
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1343   .bss.integralFBy:00000000 integralFBy
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1336   .bss.integralFBz:00000000 integralFBz
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1081   .text.calculate:00000000 $t
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1087   .text.calculate:00000000 calculate
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1312   .text.calculate:00000158 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1357   .bss.mf:00000000 mf
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1326   .data.q:00000000 q
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1364   .bss.n:00000000 n
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1323   .data.q:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1333   .bss.integralFBz:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1340   .bss.integralFBy:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1347   .bss.integralFBx:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1354   .bss.mf:00000000 $d
+C:\Users\ASUS\AppData\Local\Temp\cc6sGpfU.s:1361   .bss.n:00000000 $d
 
 UNDEFINED SYMBOLS
 HAL_I2C_Mem_Write
 hi2c1
-HAL_I2C_Mem_Read
-__aeabi_fcmple
+__aeabi_i2f
 __aeabi_fmul
-__aeabi_fsub
-__aeabi_fcmpeq
-__aeabi_fadd
-__aeabi_fcmpgt
+__aeabi_fdiv
 __aeabi_f2d
 __aeabi_ddiv
 __aeabi_d2f
+HAL_I2C_Mem_Read
+__aeabi_fcmple
+__aeabi_fsub
+__aeabi_fcmpeq
+__aeabi_fadd
 asinf
 atan2f

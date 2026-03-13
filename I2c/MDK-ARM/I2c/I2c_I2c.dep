@@ -1,7 +1,7 @@
 Dependencies for Project 'I2c', Target 'I2c': (DO NOT MODIFY !)
 CompilerVersion: 5060750::V5.06 update 6 (build 750)::.\ARMCC
 F (startup_stm32f103xe.s)(0x69B02143)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include--pd "__UVISION_VERSION SETA 530" --pd "_RTE_ SETA 1" --pd "STM32F10X_HD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xe.lst --xref -o i2c\startup_stm32f103xe.o --depend i2c\startup_stm32f103xe.d)
-F (../Core/Src/main.c)(0x69B04D3B)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application-I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o i2c\main.o --omf_browse i2c\main.crf --depend i2c\main.d)
+F (../Core/Src/main.c)(0x69B116D4)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application-I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o i2c\main.o --omf_browse i2c\main.crf --depend i2c\main.d)
 I (../Core/Inc/main.h)(0x699E9190)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x699E9189)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x699E9190)
@@ -30,7 +30,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x699E9189)
 I (../Core/Inc/i2c.h)(0x699E918F)
 I (../Core/Inc/gpio.h)(0x699E918F)
-I (..\Application\mpu6050.h)(0x69B04C99)
+I (..\Application\mpu6050.h)(0x69B115D8)
 I (D:\ASUS\Documents\keil\ARM\ARMCC\include\math.h)(0x5E53505A)
 F (../Core/Src/gpio.c)(0x699E918E)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application-I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o i2c\gpio.o --omf_browse i2c\gpio.crf --depend i2c\gpio.d)
 I (../Core/Inc/gpio.h)(0x699E918F)
@@ -533,8 +533,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x699E9189)
-F (..\Application\MPU6050.c)(0x69B05076)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application-I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o i2c\mpu6050.o --omf_browse i2c\mpu6050.crf --depend i2c\mpu6050.d)
-I (..\Application\MPU6050.h)(0x69B04C99)
+F (..\Application\MPU6050.c)(0x69B116EF)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ..\Application-I.\RTE\_I2c-ID:\ASUS\Documents\keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\ASUS\Documents\keil\Keil\STM32F1xx_DFP\2.3.0\Device\Include-D__UVISION_VERSION="530" -D_RTE_ -DSTM32F10X_HD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xE-o i2c\mpu6050.o --omf_browse i2c\mpu6050.crf --depend i2c\mpu6050.d)
+I (..\Application\MPU6050.h)(0x69B115D8)
 I (../Core/Inc/main.h)(0x699E9190)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x699E9189)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x699E9190)
@@ -562,4 +562,4 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h)(0x699E9189)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x699E9189)
 I (D:\ASUS\Documents\keil\ARM\ARMCC\include\math.h)(0x5E53505A)
-F (..\Application\MPU6050.h)(0x69B04C99)()
+F (..\Application\MPU6050.h)(0x69B115D8)()

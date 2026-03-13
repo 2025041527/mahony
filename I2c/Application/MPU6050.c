@@ -142,7 +142,7 @@ void calculate(void)
 {
 	MPU6050_ReadRawData(&mf);
 	MahonyAHRSupdateIMU(&mf, q);
-    n.Pitch = asinf(-2.0f * (q[1]*q[3] + q[0]*q[2])) * 180.0f / M_PI;
+    n.Pitch = asinf(-2.0f * (q[1]*q[3] - q[0]*q[2])) * 180.0f / M_PI;
     n.Roll = atan2f(2.0f * (q[0]*q[1] + q[2]*q[3]), q[0]*q[0] - q[1]*q[1] - q[2]*q[2] + q[3]*q[3]) * 180.0f / M_PI;
     n.Yaw = atan2f(2.0f * (q[1]*q[2] + q[0]*q[3]), q[0]*q[0] + q[1]*q[1] - q[2]*q[2] - q[3]*q[3]) * 180.0f / M_PI;
 }

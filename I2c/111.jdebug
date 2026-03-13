@@ -22,12 +22,12 @@ void OnProjectLoad (void) {
   //
   // Dialog-generated settings
   //
-  Project.AddPathSubstitute ("D:/New Folder/mahony/I2c", "$(ProjectDir)");
-  Project.AddPathSubstitute ("d:/new folder/mahony/i2c", "$(ProjectDir)");
   Project.SetDevice ("STM32F103RC");
-  Project.SetHostIF ("USB", "20725144");
+  Project.SetHostIF ("USB", "20726851");
   Project.SetTargetIF ("SWD");
   Project.SetTIFSpeed ("4 MHz");
+  Project.AddPathSubstitute ("D:/New Folder/mahony/I2c", "$(ProjectDir)");
+  Project.AddPathSubstitute ("d:/new folder/mahony/i2c", "$(ProjectDir)");
   Project.AddSvdFile ("$(InstallDir)/Config/CPU/Cortex-M3.svd");
   Project.AddSvdFile ("D:/Program Files/SEGGER/Ozone V3.38a/Config/Peripherals/STM32F103xx.svd");
   //
